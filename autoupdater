@@ -1,0 +1,41 @@
+#! /bin/bash
+
+# TekLabs TekBase
+# Copyright 2005-2018 TekLab
+# Christian Frankenstein
+# Website: teklab.de
+#          teklab.net
+
+LOGF=`date +"%Y_%m"`
+LOGP=`pwd`
+
+if [ ! -d $LOGP/logs ]; then
+    mkdir logs
+fi
+
+if [ ! -f "$LOGP/logs/$LOGF.txt" ]; then
+    echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
+    chmod 0666 $LOGP/logs/$LOGF.txt
+fi
+
+version=`git rev-parse HEAD`
+
+git pull https://gitgem.com/TekLab/tekbase-scripts-linux.git
+
+newversion=`git rev-parse HEAD`
+
+if [ "$version" != "$newversion" ]; then
+    echo "`date` - The scripts have been updated" >> $LOGP/logs/$LOGF.txt
+else
+    echo "`date` - There are no script updates available" >> $LOGP/logs/$LOGF.txt
+fi
+
+# wget http://teklab.de/downloads/tekbase_scripts.tar
+#if [ -f "tekbase_scripts.tar" ]; then
+#    echo "`date` - Scriptupdate was downloaded" >> $LOGP/logs/$LOGF.txt
+#    tar -xzf tekbase_scripts.tar
+#    rm tekbase_scripts.tar
+#else
+#    echo "`date` - Scriptupdate cant be downloaded" >> $LOGP/logs/$LOGF.txt
+#fi
+exit 0

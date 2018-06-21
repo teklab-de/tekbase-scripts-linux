@@ -1,0 +1,181 @@
+#! /bin/bash
+
+# TekLabs TekBase
+# Copyright 2005-2015 TekLab
+# Christian Frankenstein
+# Website: www.teklab.de
+#          www.teklab.us
+
+VAR_A=$1
+VAR_B=$2
+VAR_C=$3
+VAR_D=$4
+VAR_E=$5
+VAR_F=$6
+VAR_G=$7
+VAR_H=$8
+VAR_I=$9
+VAR_J=${10}
+
+if [ "$VAR_A" = "" ]; then
+    ./tekbase
+fi
+
+LOGF=`date +"%m_%Y"`
+LOGC=`date +"%m_%Y-%H_%M_%S"`
+LOGP=`pwd`
+
+if [ ! -d logs ]; then
+    mkdir logs
+    chmod 0777 logs
+fi
+if [ ! -d restart ]; then
+    mkdir restart
+    chmod 0777 restart
+fi
+
+if [ ! -f "logs/$LOGF.txt" ]; then
+   echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
+   chmod 0666 $LOGP/logs/$LOGF.txt
+fi
+
+
+if [ "$VAR_A" = "info" ]; then
+    memall=`free -k | grep -i mem | awk '{print $2,$3,$4,$6,$7}'`
+	memt=`echo "$memall" | awk '{print $1}'`
+	memu=`echo "$memall" | awk '{print $2}'`
+	memf=`echo "$memall" | awk '{print $3}'`
+	memb=`echo "$memall" | awk '{print $4}'`
+	memc=`echo "$memall" | awk '{print $5}'`
+	let memb=$memb+$memc
+	let memf=$memf+$memb
+	let memu=$memu-$memb		
+    memall="$memt $memu $memf"    
+    swapall=`free -k | grep -i swap | awk '{print $2,$3,$4}'`
+    traffic=`vnstat -m | grep -i "$VAR_B" | awk '{print $9,$10}'`
+    runtime=`uptime | awk '{print $3,$4}'`
+    hddall=`df -h | grep /dev/[hsmx][abcdefgv] | awk '{print $1,$2,$3,$4}'`
+    echo "$memall%TD%$swapall%TD%$traffic%TD%$runtime%TD%$hddall"
+fi
+
+if [ "$VAR_A" = "list" ]; then
+    cd /etc/init.d
+    echo "`ls -l | awk '{print $1"%TD%"$NF"%TEND%"}'`"
+fi
+
+if [ "$VAR_A" = "process" ]; then
+    runchk=`kill -9 $VAR_B`
+    check=`ps -p $VAR_B | grep -v "PID TTY"`
+    if [ ! -n "$check" ]; then
+	echo "`date` - Process $VAR_B was killed" >> $LOGP/logs/$LOGF.txt
+	echo "ID1"
+    else
+	echo "`date` - Process $VAR_B cant be killed" >> $LOGP/logs/$LOGF.txt
+	echo "ID2"
+    fi
+fi
+
+if [ "$VAR_A" = "psaux" ]; then
+    echo "`ps aux --sort pid | grep -v "ps aux" | grep -v "awk {printf" | grep -v "tekbase" | grep -v "perl -e use MIME::Base64" | awk '{printf($1"%TD%")
+    printf($2"%TD%")
+    printf($3"%TD%")
+    printf($4"%TD%")
+    for (i=11;i<=NF;i++) {
+	printf("%s ", $i);
+    }
+    print("%TEND%")}'`"
+fi
+
+if [ "$VAR_A" = "service" ]; then
+    cd /etc/init.d
+    if [ -f $VAR_B ]; then
+	check=`./$VAR_B $VAR_C`
+	echo "ID1"
+    fi
+fi
+
+if [ "$VAR_A" = "traffic" ]; then
+    traffic=`vnstat -m | grep -i "$VAR_B" | awk '{print $9,$10}'`
+    traffictwo=`vnstat -m | grep -i "$VAR_C" | awk '{print $9,$10}'`
+    echo "$traffic-$traffictwo"
+fi
+
+if [ "$VAR_A" = "reboot" ]; then
+    check=`reboot`
+fi
+
+if [ "$VAR_A" = "shutdown" ]; then
+    check=`shutdown -h now`
+fi
+
+if [ "$VAR_A" = "miner" ]; then
+    if  [ "$VAR_B" = "status" ]; then
+        check=`ps aux | grep -v grep | grep -i nbcminer`
+        if [ -n "$check" ]; then
+    	echo "ID1"
+        else
+    	echo "ID2"
+        fi    
+    fi
+    if  [ "$VAR_B" = "start" ]; then    
+        cd /home/user-webi
+        if [ ! -d miner ]; then
+            mkdir miner
+        fi
+        cd miner
+        if [ ! -f nbcminer ]; then
+            oscheck=`cat /etc/issue | grep -i 'Debian'`
+            if [ -n "$oscheck" ]; then
+                version=`cat /etc/debian_version | awk -F. '{print $1}'`
+                os='debian'
+            fi
+            oscheck=`cat /etc/issue | grep -i 'Ubuntu'`
+            if [ -n "$oscheck" ]; then
+                version='14'
+                os='ubuntu'
+            fi
+            wget http://teklab.de/downloads/nbc_${os}_${version}_64.tar
+            tar -xzf nbc_${os}_${version}_64.tar
+            rm nbc_${os}_${version}_64.tar
+        fi
+       	runchk=`pkill -f Nabucoin`
+        if [ -f nbcminer.pid ]; then
+	        check=`ps -p \`cat nbcminer.pid\` | grep -i "nbcminer"`
+	        if [ -n "$check" ]; then
+                rm nbcminer.pid
+	        fi
+	    fi
+	    if [ ! -n "$check" ]; then
+            ./nbcminer -u $VAR_C -p 123456 -c Nabucoin &> nbcminer.log &
+            echo $! > nbcminer.pid
+            echo "`date` - NBC Miner was started" >> $LOGP/logs/$LOGF.txt
+	        echo "ID1"
+        else
+        	echo "`date` - NBC Miner cant be stopped and restarted" >> $LOGP/logs/$LOGF.txt
+	        echo "ID2"
+        fi
+    fi
+    if  [ "$VAR_B" = "stop" ]; then    
+        cd /home/user-webi
+        if [ ! -d miner ]; then
+            mkdir miner
+        fi
+        cd miner
+       	runchk=`pkill -f Nabucoin` 
+        if [ -f nbcminer.pid ]; then
+	        check=`ps -p \`cat nbcminer.pid\` | grep -i "nbcminer"`
+	        if [ ! -n "$check" ]; then
+	            rm nbcminer.pid
+	        fi
+	    fi
+	    if [ ! -n "$check" ]; then
+            echo "`date` - NBC Miner was stopped" >> $LOGP/logs/$LOGF.txt
+	        echo "ID1"
+        else
+        	echo "`date` - NBC Miner cant be stopped" >> $LOGP/logs/$LOGF.txt
+	        echo "ID2"
+        fi
+    fi
+fi
+
+exit 0
