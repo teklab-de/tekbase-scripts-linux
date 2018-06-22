@@ -8,7 +8,6 @@ TekBASE server management scripts for Debian, Ubuntu, OpenSuSE, Centos and Fedor
 ```
 cd /home
 git clone https://gitgem.com/TekLab/tekbase-scripts-linux.git
-cd tekbase-scripts-linux
 ```
 
 ## License
