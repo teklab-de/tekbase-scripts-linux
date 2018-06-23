@@ -43,18 +43,19 @@ if [ ! -f "logs/$LOGF.txt" ]; then
 fi
 
 if [ "$VAR_A" = "start" ]; then
-    if [ -f $LOGP/restart/$VAR_B-streams-$VAR_C ]; then
-	rm $LOGP/restart/$VAR_B-streams-$VAR_C
+    if [ -f $LOGP/restart/$VAR_B-$VAR_E-$VAR_C ]; then
+	rm $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
     fi
-    echo "#! /bin/bash" >> $LOGP/restart/$VAR_B-streams-$VAR_C
-    echo "if [ -f /home/$VAR_B/streams/$VAR_D/$VAR_E.pid ]; then" >> $LOGP/restart/$VAR_B-streams-$VAR_C
-    echo "check=\`ps -p \`cat /home/$VAR_B/streams/$VAR_D/$VAR_E.pid\` | grep -i "$VAR_E"\`" >> $LOGP/restart/$VAR_B-streams-$VAR_C
-    echo "fi" >> $LOGP/restart/$VAR_B-streams-$VAR_C
-    echo "if [ ! -n \"\$check\" ]; then" >> $LOGP/restart/$VAR_B-streams-$VAR_C
-    echo "cd $LOGP;sudo -u $VAR_B ./streams 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H' '$VAR_I' '$VAR_J'" >> $LOGP/restart/$VAR_B-streams-$VAR_C
-    echo "fi" >> $LOGP/restart/$VAR_B-streams-$VAR_C
-    echo "exit 0" >> $LOGP/restart/$VAR_B-streams-$VAR_C
-    chmod 0755 $LOGP/restart/$VAR_B-streams-$VAR_C
+    echo "#! /bin/bash" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "if [ -f /home/$VAR_B/streams/$VAR_D/$VAR_E.pid ]; then" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "pid=\`cat /home/$VAR_B/streams/$VAR_D/$VAR_E.pid\`" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "check=\`ps -p \$pid | grep -i "$VAR_E"\`" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "fi" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "if [ ! -n \"\$check\" ]; then" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "cd $LOGP;sudo -u $VAR_B ./streams 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H' '$VAR_I' '$VAR_J'" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "fi" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "exit 0" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    chmod 0755 $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
 
     cd /home/$VAR_B/streams/$VAR_D
 
@@ -151,8 +152,8 @@ if [ "$VAR_A" = "start" ]; then
 fi
 
 if [ "$VAR_A" = "stop" ]; then
-    if [ -f $LOGP/restart/$VAR_B-streams-$VAR_C ]; then
-	rm $LOGP/restart/$VAR_B-streams-$VAR_C
+    if [ -f $LOGP/restart/$VAR_B-$VAR_E-$VAR_C ]; then
+		rm $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
     fi
 
     cd /home/$VAR_B/streams/$VAR_D
