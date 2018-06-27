@@ -370,6 +370,7 @@ case "$VAR_A" in
 	expect "Re-type password:" {send "$VAR_D\r"}
 	expect eof
 EOF
+	ftpasswd --group --file=/etc/proftpd/ftpd.group --name=$VAR_C --gid=$gid --member=$VAR_C
 	echo "ID1"
     ;;
     # FTP User bearbeiten
