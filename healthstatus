@@ -82,9 +82,17 @@ if [ "$VAR_A" = "dedicated" ]; then
 	    hdds="$hdds,$hddtemp$hddpart]}"
 	fi
     done
-    cpuperc=`mpstat -P ALL | awk 'NR>4 {print "\""$3+1"\":\""$4"\""}' | tr "\n" ","`
+    timeformat=`mpstat | grep -i PM`
+    if [ "$timeformat" == "" ]; then
+        cpuperc=`mpstat -P ALL | awk 'NR>4 {print "\""$2+1"\":\""$3"\""}' | tr "\n" ","`
+    else
+        cpuperc=`mpstat -P ALL | awk 'NR>4 {print "\""$3+1"\":\""$4"\""}' | tr "\n" ","`
+    fi
 #   cpuname=`cat /proc/cpuinfo | grep -i 'model name' | sed -e 's/model name.*: //' | uniq -u`
     cpuinfo=`dmidecode --type processor | grep -i "Version:\|Max Speed:" | sed 's/Version: /"name":"/g' | sed 's/Max Speed: /"speed":"/g' | sed 's/^[ \t]*//' | sed 's/[[:space:]]\+/ /g' | sed 's/$/"/g' | tr "\n" "," | sed 's/ "/"/g'`
+    if [ "$cpuinfo" == "" ]; then
+        cpuinfo=`cat /proc/cpuinfo | grep -m 1 -i "model name" | sed 's/model name/"name":"/g' | sed 's/^[ \t]*//' | sed 's/[[:space:]]:[[:space:]]\+//g' | sed 's/$/"/g' | tr "\n" ","`
+    fi
     cputemp=`sensors | grep -i "temp1:" | awk '{print "\"temp\":\""$2"\",\"critic\":\""$5"\""}' | sed 's/[+°C)]//g' | uniq -u`
 #    traffic=`vnstat | grep -i "$VAR_B" | sed 's/KiB/KB/g' | sed 's/MiB/MB/g' | sed 's/GiB/GB/g' | awk '{print "$3,$4"$6,$7}'`
     ipv4=`ifconfig | grep -v "127.0.0.1" | awk -v i=1 '/inet addr/{print "\""i++"\":\""substr($2,6)"\""}' | tr "\n" ","`
@@ -92,4 +100,5 @@ if [ "$VAR_A" = "dedicated" ]; then
     trafficmonths=`vnstat -m | grep -v "eth\|month\|estimated\|-" | sed 's/KiB/KB/g' | sed 's/MiB/MB/g' | sed 's/GiB/GB/g' | sed 's/TiB/TB/g' | sed 's/\//./g' | awk 'NR>2 {print "{\"date\":\""$1,$2"\",\"rx\":\""$3,$4"\",\"tx\":\""$6,$7"\"}"}' | tr "\n" ","`
     echo "{\"cpu\":{$cpuinfo\"cores\":{$cpuperc},$cputemp},\"ram\":{$memtype\"total\":\"$memtotal\",\"free\":\"$memfree\"},\"hdds\":[$hdds],\"ipv4\":{$ipv4},\"traffic\":{\"daily\":[$trafficdays],\"monthly\":[$trafficmonths]},\"rootpw\":\"$(checkpasswd)\"}" | sed 's/,}/}/g' | sed 's/,]/]/g'
 fi
+
 exit 0
