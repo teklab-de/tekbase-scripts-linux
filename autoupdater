@@ -20,7 +20,35 @@ fi
 
 chkgit=`which git`
 if [ "$chkgit" = "" ]; then
-	apt-get install git
+    check=$(cat /etc/*-release | grep -i 'CentOS')
+    if [ -n "$check" ]; then
+		yum install git -y
+    fi
+    
+    check=$(cat /etc/*-release | grep -i 'Debian')
+    if [ -n "$check" -a "$os_install" = "" ]; then
+		apt-get install git -y
+    fi
+    
+    check=$(cat /etc/*-release | grep -i 'Fedora')
+    if [ -n "$check" -a "$os_install" = "" ]; then
+		yum install git -y
+    fi
+    
+    check=$(cat /etc/*-release | grep -i 'Red Hat')
+    if [ -n "$check" -a "$os_install" = "" ]; then
+		apt-get install git -y
+    fi
+    
+    check=$(cat /etc/*-release | grep -i 'SUSE')
+    if [ -n "$check" -a "$os_install" = "" ]; then
+		zypper install git -y
+    fi
+    
+    check=$(cat /etc/*-release | grep -i 'Ubuntu')
+    if [ -n "$check" -a "$os_install" = "" ] || [ -n "$check" -a "$os_name" = "Debian" ]; then
+		apt-get install git -y
+	fi
 fi
 
 if [ ! -d ".git" ]; then
