@@ -18,6 +18,11 @@ if [ ! -f "$LOGP/logs/$LOGF.txt" ]; then
     chmod 0666 $LOGP/logs/$LOGF.txt
 fi
 
+chkgit=`which git`
+if [ "$chkgit" = "" ]; then
+	apt-get install git
+fi
+
 version=`git rev-parse HEAD`
 
 git pull https://gitgem.com/TekLab/tekbase-scripts-linux.git
