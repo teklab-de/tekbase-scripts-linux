@@ -6,11 +6,6 @@
 # Website: www.teklab.de
 #          www.teklab.us
 
-# su $VAR_B -c "./tekbase 9 '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H' '$VAR_I' '$VAR_J'"
-#Wed Oct 26 17:10:17 CEST 2011: 33 kd10000-gs_77 2 kd10000 cs ./hlds_run -game cstrike +map de_dust -maxplayers 12 +ip 84.200.37.77 -port 27016 +sv_password test123 -autoupdate server
-#echo `date`: $@ >>/tmp/tekbase
-#id >>/tmp/tekbase
-#echo >>/tmp/tekbase
 
 VAR_A=$1
 VAR_B=$2
@@ -393,7 +388,7 @@ EOF
     # Versionsausgabe und Screenlog
     18)
     if [ ! -n "$VAR_B" ]; then
-	echo "8500"
+	echo "8605"
     fi
 
     if [ "$VAR_B" = "scservlog" ]; then
