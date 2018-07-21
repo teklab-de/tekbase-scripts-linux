@@ -276,10 +276,10 @@ if [ "$VAR_A" = "maplist" ]; then
 fi
 
 if [ "$VAR_A" = "install" ]; then
-    startchk=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B$VAR_E-X"`
+    startchk=`ps aux | grep -v grep | grep -i screen | grep -i ma$VAR_B$VAR_E-X"`
     if [ ! -n "$startchk" ]; then
-    runscr=`screen -A -m -d -S $VAR_F$VAR_B$VAR_E-X ./games installrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"`
-    check=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B$VAR_E-X"`
+    runscr=`screen -A -m -d -S ma$VAR_B$VAR_E-X ./games installrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"`
+    check=`ps aux | grep -v grep | grep -i screen | grep -i "ma$VAR_B$VAR_E-X"`
     fi
     if [ ! -n "$check" ]; then
     echo "ID2"
