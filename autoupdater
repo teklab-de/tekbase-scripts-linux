@@ -26,7 +26,8 @@ fi
 if [ ! -d ".git" ]; then
 	git clone https://gitgem.com/TekLab/tekbase-scripts-linux.git
 	cd tekbase-scripts-linux
-	mv * $LOGP
+	mv * ../
+	mv .git ../
 	cd ..
 	rm -R tekbase-scripts-linux
 	newversion=2
