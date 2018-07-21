@@ -23,11 +23,18 @@ if [ "$chkgit" = "" ]; then
 	apt-get install git
 fi
 
-version=`git rev-parse HEAD`
+if [ ! -d ".git" ]; then
+	git clone https://gitgem.com/TekLab/tekbase-scripts-linux.git
+	newversion=2
+	version=1
+else
+	version=`git rev-parse HEAD`
 
-git pull https://gitgem.com/TekLab/tekbase-scripts-linux.git
+	git fetch
+	git reset --hard origin/master
 
-newversion=`git rev-parse HEAD`
+	newversion=`git rev-parse HEAD`
+fi
 
 if [ "$version" != "$newversion" ]; then
     echo "`date` - The scripts have been updated" >> $LOGP/logs/$LOGF.txt
