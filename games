@@ -48,7 +48,7 @@ fi
 
 if [ "$VAR_A" = "start" ]; then
     if [ -f $LOGP/restart/$VAR_B-server-$VAR_C ]; then
-    rm $LOGP/restart/$VAR_B-server-$VAR_C
+		rm $LOGP/restart/$VAR_B-server-$VAR_C
     fi
 
     echo "#! /bin/bash" >> $LOGP/restart/$VAR_B-server-$VAR_C
@@ -61,63 +61,63 @@ if [ "$VAR_A" = "start" ]; then
 
     cd /home/$VAR_B/server/$VAR_D
 
-    if [ -f /$LOGP/includes/$VAR_E/stop ]; then
-	/$LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D"
+    if [ -f $LOGP/includes/$VAR_E/stop ]; then
+		$LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D"
     else
-	runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}'\``
-	check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
-	wipe=`screen -wipe`
+		runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}'\``
+		check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
+		wipe=`screen -wipe`
     fi
     
     if [ ! -n "$check" ]; then
-    if [ -f screenlog.0 ]; then
-        echo "" > screenlog.0
-    fi
+		if [ -f screenlog.0 ]; then
+			echo "" > screenlog.0
+  		fi
 
-    if [ -f /$LOGP/includes/$VAR_E/start ]; then
-        /$LOGP/includes/$VAR_E/start "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_F"
-        check="ID1"
-    else
-	if [ "$VAR_G" != "" ]; then
-	    screen -A -m -d -L -S server$VAR_C-X taskset -c $VAR_G $VAR_F
+		if [ -f $LOGP/includes/$VAR_E/start ]; then
+        	$LOGP/includes/$VAR_E/start "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_F"
+ 			check="ID1"
+		else
+			if [ "$VAR_G" != "" ]; then
+				screen -A -m -d -L -S server$VAR_C-X taskset -c $VAR_G $VAR_F
+			else
+				screen -A -m -d -L -S server$VAR_C-X $VAR_F
+			fi
+			check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
+		fi
+
+		if [ -n "$check" ]; then
+			echo "`date` - Game /home/$VAR_B/server/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+			echo "ID1"
+		else
+			echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+			echo "ID2"
+		fi
 	else
-	    screen -A -m -d -L -S server$VAR_C-X $VAR_F
-	fi
-	check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
-    fi
-
-    if [ -n "$check" ]; then
-        echo "`date` - Game /home/$VAR_B/server/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
-        echo "ID1"
-    else
-        echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
-        echo "ID2"
-    fi
-    else
-    echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be stopped and restarted ($VAR_F)" >> $LOGP/logs/$LOGF.txt
-    echo "ID3"
+		echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be stopped and restarted ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+		echo "ID3"
     fi
 fi
 
 if [ "$VAR_A" = "stop" ]; then
     if [ -f $LOGP/restart/$VAR_B-server-$VAR_C ]; then
-    rm $LOGP/restart/$VAR_B-server-$VAR_C
+    	rm $LOGP/restart/$VAR_B-server-$VAR_C
     fi
 
-    if [ -f /$LOGP/includes/$VAR_E/stop ]; then
-	/$LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D"
-    else
-	runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}'\``
-	check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
-	wipe=`screen -wipe`
+    if [ -f $LOGP/includes/$VAR_E/stop ]; then
+		$LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D"
+	else
+		runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}'\``
+		check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
+		wipe=`screen -wipe`
     fi
 
     if [ ! -n "$check" ]; then
-    echo "`date` - Game /home/$VAR_B/server/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
-    echo "ID1"
+		echo "`date` - Game /home/$VAR_B/server/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
+		echo "ID1"
     else
-    echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be stopped" >> $LOGP/logs/$LOGF.txt
-    echo "ID2"
+		echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be stopped" >> $LOGP/logs/$LOGF.txt
+		echo "ID2"
     fi
 fi
 
