@@ -388,7 +388,7 @@ EOF
     # Versionsausgabe und Screenlog
     18)
     if [ ! -n "$VAR_B" ]; then
-	echo "8605"
+	echo "8607"
     fi
 
     if [ "$VAR_B" = "scservlog" ]; then
