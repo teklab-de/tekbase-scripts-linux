@@ -273,9 +273,7 @@ if [ "$VAR_A" = "playlist" ]; then
 	if [ $VAR_E != "" ]; then
 	    if [ $VAR_F != "" ]; then
 		cd songs
-		if [ ! -d $VAR_F ]; then
-		    mkdir $VAR_F
-		fi
+	    mkdir -p $VAR_F
    		cd /home/$VAR_B/streams/$VAR_D
 	    	runfind=`find /home/$VAR_B/streams/$VAR_D/songs/$VAR_F/ -maxdepth 1 -type f \( -name "*.mp3" -o -name "*.acc" \) > /home/$VAR_B/streams/$VAR_D/playlists/$VAR_E.lst`
 		if [ -f $VAR_E.lst ]; then
