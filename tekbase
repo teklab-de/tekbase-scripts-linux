@@ -195,9 +195,7 @@ case "$VAR_A" in
     # Games/Apps/Voice/Stream installieren 2-2
     6)
     cd /home/$VAR_B
-    if [ ! -d $VAR_F ]; then
-	su $VAR_B -c "mkdir $VAR_F"
-    fi
+	su $VAR_B -c "mkdir -p $VAR_F"
     cd $VAR_F
     if [ "$VAR_G" = "delete" ]; then
 	sleep 10
@@ -222,9 +220,7 @@ case "$VAR_A" in
 #	fi
     fi
     cd $LOGP
-    if [ ! -d cache ]; then
-	mkdir cache
-    fi
+	mkdir -p cache
     cd cache
     if [ ! -f $VAR_D.tar ]; then
 	mkdir $LOGC
@@ -507,9 +503,7 @@ EOF
     if [ "$VAR_F" = "startscr" ]; then
         filelist=`echo "$VAR_E" | sed -e 's/;/\n/g'`
 	cd $LOGP/cache
-	if [ ! -d $VAR_B$VAR_D ]; then
-	    mkdir $VAR_B$VAR_D
-	fi
+    mkdir -p $VAR_B$VAR_D
 	chmod 0777 $VAR_B$VAR_D
         cd /home/$VAR_B/$VAR_C/$VAR_D
         for LINE in $filelist
