@@ -85,9 +85,7 @@ if [ "$VAR_A" = "installrun" ]; then
     fi
     if [ ! -f /etc/$vzconf/$VAR_B.conf ]; then
         cd $LOGP
-    	if [ ! -d cache ]; then
-			mkdir cache
-    	fi
+		mkdir -p cache 	
     	cd /vz/template/cache
     	if [ ! -f $VAR_C.tar.gz ]; then
 			mkdir $LOGC
@@ -326,15 +324,15 @@ fi
 
 if [ "$VAR_A" = "backuplist" ]; then
     if [ -d /usr/vz/$VAR_B ]; then
-	cd /usr/vz/$VAR_B
-	check=`find -name "*.tgz" -o -name "*.lzo" -type f`
-	output=""
-	for LINE in $check
-	do
-	    output=`echo "$output$LINE%TEND%"`
-	done
-    fi
-    echo "$output"
+		cd /usr/vz/$VAR_B
+		check=`find -name "*.tgz" -o -name "*.lzo" -type f`
+		output=""
+		for LINE in $check
+		do
+	    	output=`echo "$output$LINE%TEND%"`
+		done
+	fi
+	echo "$output"
 fi
 
 if [ "$VAR_A" = "backup" ]; then
@@ -360,24 +358,18 @@ if [ "$VAR_A" = "backuprun" ]; then
     if [ ! -n "$check" ]; then
 	vzctl start $VAR_B
     fi
-    if [ ! -d /usr/vz ]; then
-	cd /usr
-	mkdir vz
-    fi
-    if [ ! -d /usr/vz/$VAR_B ]; then
-	cd /usr/vz
-	mkdir $VAR_B
-    fi
-   dump=`date +"%d_%h_%Y-%H_%M_%S"`
+    mkdir -p /usr/vz
+    mkdir -p /usr/vz/$VAR_B
+	dump=`date +"%d_%h_%Y-%H_%M_%S"`
 #   vzdump --mode stop --compress lzo --maxfiles $VAR_C --bwlimit 30720 --dumpdir /usr/vz/$VAR_B $VAR_B
-   vzdump --compress gzip --maxfiles $VAR_C --bwlimit 30720 --dumpdir /usr/vz/$VAR_B $VAR_B
-   cd /usr/vz/$VAR_B
-   checkfile=`find vzdump*`
-   if [ -n "$checkfile" ]; then
-	echo "`date` - VServer $VAR_B backup was created" >> $LOGP/logs/$LOGF.txt
-   else
-	echo "`date` - VServer $VAR_B backup cant be created" >> $LOGP/logs/$LOGF.txt
-   fi
+	vzdump --compress gzip --maxfiles $VAR_C --bwlimit 30720 --dumpdir /usr/vz/$VAR_B $VAR_B
+	cd /usr/vz/$VAR_B
+	checkfile=`find vzdump*`
+	if [ -n "$checkfile" ]; then
+		echo "`date` - VServer $VAR_B backup was created" >> $LOGP/logs/$LOGF.txt
+	else
+		echo "`date` - VServer $VAR_B backup cant be created" >> $LOGP/logs/$LOGF.txt
+	fi
 fi
 
 if [ "$VAR_A" = "remove" ]; then
