@@ -75,12 +75,4 @@ else
     echo "`date` - There are no script updates available" >> $LOGP/logs/$LOGF.txt
 fi
 
-# wget http://teklab.de/downloads/tekbase_scripts.tar
-#if [ -f "tekbase_scripts.tar" ]; then
-#    echo "`date` - Scriptupdate was downloaded" >> $LOGP/logs/$LOGF.txt
-#    tar -xzf tekbase_scripts.tar
-#    rm tekbase_scripts.tar
-#else
-#    echo "`date` - Scriptupdate cant be downloaded" >> $LOGP/logs/$LOGF.txt
-#fi
 exit 0
