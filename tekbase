@@ -195,7 +195,7 @@ case "$VAR_A" in
     # Games/Apps/Voice/Stream installieren 2-2
     6)
     cd /home/$VAR_B
-	su $VAR_B -c "mkdir -p $VAR_F"
+    su $VAR_B -c "mkdir -p $VAR_F"
     cd $VAR_F
     if [ "$VAR_G" = "delete" ]; then
 	sleep 10
@@ -219,6 +219,23 @@ case "$VAR_A" in
 #	    chmod 755 $VAR_C
 #	fi
     fi
+
+    if [ -f $HOME/$VAR_G ] && [ "$VAR_G" != "" ]; then
+	mv $HOME/$VAR_G /home/$VAR_B/$VAR_F/$VAR_C/install.sh
+	cd /home/$VAR_B/$VAR_F/$VAR_C
+	chown $VAR_B install.sh
+	chmod 755 install.sh
+	su $VAR_B -c "./install.sh"
+	rm install.sh
+	counter=`find -type f | wc -l`
+	if [ "$counter" != "0" ]; then
+	    echo "`date` - Script in $VAR_B/$VAR_F/$VAR_C was installed" >> $LOGP/logs/$LOGF.txt
+	else
+	    echo "`date` - Script in $VAR_B/$VAR_F/$VAR_C cant be installed" >> $LOGP/logs/$LOGF.txt
+	fi
+	exit 0
+    fi
+
     cd $LOGP
 	mkdir -p cache
     cd cache
@@ -274,7 +291,7 @@ case "$VAR_A" in
 	cd /home/$VAR_B/$VAR_F/$VAR_C
 	if [ -f install.sh ]; then
 	    chmod 0777 install.sh
-	    ./install.sh
+	    su $VAR_B -c "./install.sh"
 	    rm install.sh
 	fi
 	if [ "$VAR_F" = "server" ]; then
@@ -384,7 +401,7 @@ EOF
     # Versionsausgabe und Screenlog
     18)
     if [ ! -n "$VAR_B" ]; then
-	echo "8607"
+	echo "8608"
     fi
 
     if [ "$VAR_B" = "scservlog" ]; then
