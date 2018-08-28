@@ -444,6 +444,7 @@ EOF
 	        ./tekbase_daemon &
 	    fi
 	fi
+	fi
 
     if [ "$VAR_B" = "cpumem" ]; then
 		check=`ps aux | grep -i "screen${VAR_D}-X" | grep -v grep | sed -e 's#.*server'${VAR_D}'-X \.\(\)#\1#' | grep -v "sed -e"
@@ -460,14 +461,13 @@ EOF
 							chkcpu=`ps -p $chkpid -o pcpu --no-headers`
 							chkfree=`free -k | grep -i "mem" | awk '{print $2}'`
 							echo "$chkcpu,$chkmem,$chkfree"
-							break
+							pidend=52
 						fi
 					fi
              		let pidone=pidone+1
          		done
 			fi
 		fi
-    fi
     fi
     ;;
     # Autoupdater
