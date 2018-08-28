@@ -447,7 +447,7 @@ EOF
 	fi
 
     if [ "$VAR_B" = "cpumem" ]; then
-		check=`ps aux | grep -i "screen${VAR_C}-X" | grep -v grep | sed -e 's#.*server'${VAR_C}'-X \.\(\)#\1#' | grep -v "sed -e"`
+		check=`ps x | grep -i "screen"${VAR_C}"-X" | grep -v grep | sed -e 's#.*server'${VAR_C}'-X \.\(\)#\1#' | grep -v "sed -e"`
 		if [ -n "$check" ]; then
 			pidone=`ps x | grep -i "$check" | grep -vi screen | grep -v grep | awk '{print $1}'`
 			if [ -n "$pidone" ]; then
