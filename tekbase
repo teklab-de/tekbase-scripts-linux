@@ -444,11 +444,35 @@ EOF
 	        ./tekbase_daemon &
 	    fi
 	fi
+
+    if [ "$VAR_B" = "cpumem" ]; then
+		check=`ps aux | grep -i "screen${VAR_D}-X" | grep -v grep | sed -e 's#.*server'${VAR_D}'-X \.\(\)#\1#' | grep -v "sed -e"
+		if [ -n "$check" ]; then
+			pidone=`ps x | grep -i "$check" | grep -vi screen | grep -v grep | grep -i "${VAR_C}" | awk '{print $1}'`
+			if [ -n "$pidone" ]; then
+				let pidend=pidone+51
+				let pidone=pidone+1
+         		while [ $pidone -lt $pidend ]; do
+             		chkpid=`ps x | grep -i"${pidone} "`
+					if [ -n "$chkpid" ]; then
+						chkmem=`ps -p $chkpid -o pmem --no-headers`
+						if [ "$chkmem" != "0.0" ] && [ "$chkmem" != "0.1" ] && [ "$chkmem" != "0.2" ]; then
+							chkcpu=`ps -p $chkpid -o pcpu --no-headers`
+							chkfree=`free -k | grep -i "mem" | awk '{print $2}'`
+							echo "$chkcpu,$chkmem,$chkfree"
+							break
+						fi
+					fi
+             		let pidone=pidone+1
+         		done
+			fi
+		fi
+    fi
     fi
     ;;
     # Autoupdater
     19)
-    runscr=`screen -A -m -d -S tekautoup ./autoupdater XDQuT930`
+    runscr=`screen -A -m -d -S tekautoup ./autoupdater`
     check=`ps aux | grep -v grep | grep -i screen | grep -i tekautoup`
     if [ ! -n "$check" ]; then
 	echo "ID2"
