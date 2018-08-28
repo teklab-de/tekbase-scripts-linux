@@ -447,27 +447,26 @@ EOF
 	fi
 
     if [ "$VAR_B" = "cpumem" ]; then
-		check=`ps x | grep -i "server${VAR_C}-X" | grep -v grep | sed -e 's#.*server'${VAR_C}'-X \.\(\)#\1#' | grep -v "sed -e"`
-		if [ -n "$check" ]; then
-			pidone=`ps x | grep -i "$check" | grep -vi screen | grep -v grep | awk '{print $1}'`
-			if [ -n "$pidone" ]; then
-				let pidend=pidone+51
-				let pidone=pidone+1
-         		while [ $pidone -lt $pidend ]; do
-             		chkpid=`ps x | grep -i"${pidone} "`
-					if [ -n "$chkpid" ]; then
-						chkmem=`ps -p $chkpid -o pmem --no-headers`
-						if [ "$chkmem" != "0.0" ] && [ "$chkmem" != "0.1" ] && [ "$chkmem" != "0.2" ]; then
-							chkcpu=`ps -p $chkpid -o pcpu --no-headers`
-							chkfree=`free -k | grep -i "mem" | awk '{print $2}'`
-							echo "$chkcpu,$chkmem,$chkfree"
-							pidend=52
-						fi
-					fi
-             		let pidone=pidone+1
-         		done
+	check=`ps x | grep -i "server${VAR_C}-X" | grep -v grep | sed -e 's#.*server'${VAR_C}'-X \.\(\)#\1#' | grep -v "sed -e"`
+	if [ -n "$check" ]; then
+	    pidone=`ps x | grep -i "$check" | grep -vi screen | grep -v grep | awk '{print $1}'`
+	    if [ -n "$pidone" ]; then
+		let pidend=pidone+51
+		while [ $pidone -lt $pidend ]; do
+		    chkpid=`ps x | grep -i "${pidone} " | grep -v grep`
+		    if [ -n "$chkpid" ]; then
+			chkmem=`ps -p $pidone -o pmem --no-headers | awk '{print $1}'`
+			if [ "$chkmem" != "0.0" ] && [ "$chkmem" != "0.1" ] && [ "$chkmem" != "0.2" ]; then
+			    chkcpu=`ps -p $pidone -o pcpu --no-headers | awk '{print $1}'`
+			    chkfree=`free -k | grep -i "mem" | awk '{print $2}'`
+			    echo "$chkcpu;$chkmem;$chkfree"
+			    pidend=52
 			fi
-		fi
+		    fi
+		    let pidone=pidone+1
+		done
+	    fi
+	fi
     fi
     ;;
     # Autoupdater
