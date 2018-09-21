@@ -337,7 +337,7 @@ case "$VAR_A" in
     ;;
     # Games/Apps/Voice/Stream deinstallieren 2-2
     8)
-    sleep 2
+    skeeo 10
     cd /home/$VAR_B/$VAR_D
     rm -r $VAR_C
 #   if [ -f $VAR_C.tar ]; then
@@ -401,7 +401,7 @@ EOF
     # Versionsausgabe und Screenlog
     18)
     if [ ! -n "$VAR_B" ]; then
-	echo "8609"
+	echo "8610"
     fi
 
     if [ "$VAR_B" = "scservlog" ]; then
