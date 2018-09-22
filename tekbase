@@ -337,7 +337,7 @@ case "$VAR_A" in
     ;;
     # Games/Apps/Voice/Stream deinstallieren 2-2
     8)
-    skeeo 10
+    sleep 10
     cd /home/$VAR_B/$VAR_D
     rm -r $VAR_C
 #   if [ -f $VAR_C.tar ]; then
