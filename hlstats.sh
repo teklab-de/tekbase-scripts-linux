@@ -19,9 +19,9 @@ fi
 LOGF=$(date +"%m_%Y")
 LOGP=$(pwd)
 
-mysqlpwd=$(cat hlstats.ini | grep -i password | awk '{print $2}')
-mysqlusr=$(cat hlstats.ini | grep -i login | awk '{print $2}')
-wwwpath=$(cat hlstats.ini | grep -i www | awk '{print $2}')
+mysqlpwd=$(grep -i password hlstats.ini | awk '{print $2}')
+mysqlusr=$(grep -i login hlstats.ini | awk '{print $2}')
+wwwpath=$(grep -i www hlstats.ini | awk '{print $2}')
 
 if [ ! -f "logs/$LOGF.txt" ]; then
     echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
