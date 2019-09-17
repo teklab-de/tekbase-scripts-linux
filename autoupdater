@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # TekLabs TekBase
-# Copyright 2005-2018 TekLab
+# Copyright since 2005 TekLab
 # Christian Frankenstein
 # Website: teklab.de
 #          teklab.net
@@ -22,51 +22,51 @@ chkgit=`which git`
 if [ "$chkgit" = "" ]; then
     check=$(cat /etc/*-release | grep -i 'CentOS')
     if [ -n "$check" ]; then
-		yum install git -y
+        yum install git -y
     fi
     
     check=$(cat /etc/*-release | grep -i 'Debian')
     if [ -n "$check" -a "$os_install" = "" ]; then
-		apt-get install git -y
+        apt-get install git -y
     fi
     
     check=$(cat /etc/*-release | grep -i 'Fedora')
     if [ -n "$check" -a "$os_install" = "" ]; then
-		yum install git -y
+        yum install git -y
     fi
     
     check=$(cat /etc/*-release | grep -i 'Red Hat')
     if [ -n "$check" -a "$os_install" = "" ]; then
-		apt-get install git -y
+        apt-get install git -y
     fi
     
     check=$(cat /etc/*-release | grep -i 'SUSE')
     if [ -n "$check" -a "$os_install" = "" ]; then
-		zypper install git -y
+        zypper install git -y
     fi
     
     check=$(cat /etc/*-release | grep -i 'Ubuntu')
     if [ -n "$check" -a "$os_install" = "" ] || [ -n "$check" -a "$os_name" = "Debian" ]; then
-		apt-get install git -y
-	fi
+        apt-get install git -y
+    fi
 fi
 
 if [ ! -d ".git" ]; then
-	git clone https://gitgem.com/TekLab/tekbase-scripts-linux.git
-	cd tekbase-scripts-linux
-	mv * ../
-	mv .git ../
-	cd ..
-	rm -R tekbase-scripts-linux
-	newversion=2
-	version=1
+    git clone https://github.com/teklab-de/tekbase-scripts-linux.git
+    cd tekbase-scripts-linux
+    mv * ../
+    mv .git ../
+    cd ..
+    rm -R tekbase-scripts-linux
+    newversion=2
+    version=1
 else
-	version=`git rev-parse HEAD`
+    version=`git rev-parse HEAD`
 
-	git fetch
-	git reset --hard origin/master
+    git fetch
+    git reset --hard origin/master
 
-	newversion=`git rev-parse HEAD`
+    newversion=`git rev-parse HEAD`
 fi
 
 if [ "$version" != "$newversion" ]; then
