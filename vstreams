@@ -1,10 +1,10 @@
 #! /bin/bash
 
 # TekLabs TekBase
-# Copyright 2005-2015 TekLab
+# Copyright since 2005 TekLab
 # Christian Frankenstein
-# Website: www.teklab.de
-#          www.teklab.us
+# Website: teklab.de
+#          teklab.net
 
 VAR_A=$1
 VAR_B=$2
@@ -21,12 +21,12 @@ if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
 
-LOGDAY=`date +"%Y-%m-%d"`
-LOGMONTH=`date +"%Y-%m"`
+LOGDAY=$(date +"%Y-%m-%d")
+LOGMONTH=$(date +"%Y-%m")
 
-LOGF=`date +"%Y_%m"`
-LOGC=`date +"%Y_%m-%H_%M_%S"`
-LOGP=`pwd`
+LOGF=$(date +"%Y_%m")
+LOGC=$(date +"%Y_%m-%H_%M_%S")
+LOGP=$(pwd)
 
 if [ ! -d logs ]; then
     mkdir logs
@@ -38,18 +38,18 @@ if [ ! -d restart ]; then
 fi
 
 if [ ! -f "logs/$LOGF.txt" ]; then
-   echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
-   chmod 0666 $LOGP/logs/$LOGF.txt
+    echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
+    chmod 0666 $LOGP/logs/$LOGF.txt
 fi
 
-#A typ
-#B USER
-#C ID
-#D PFAD
-#E APP
-#F Startskript
-#G VARA
-#H VARB
+#VAR_A typ
+#VAR_B USER
+#VAR_C ID
+#VAR_D PATH
+#VAR_E APP
+#VAR_F STARTSCRIPT
+#VAR_G PORT
+#VAR_H -
 
 if [ "$VAR_A" = "start" ]; then
     if [ -f $LOGP/restart/$VAR_B-vstreams-$VAR_C ]; then
@@ -65,9 +65,9 @@ if [ "$VAR_A" = "start" ]; then
 
     cd /home/$VAR_B/vstreams/$VAR_D
 
-    runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B-X" | awk '{print $2}'\``
-    check=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B-X"`
-    wipe=`screen -wipe`
+    runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B-X" | awk '{print $2}'`)
+    check=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B-X")
+    wipe=$(screen -wipe)
     if [ ! -n "$check" ]; then
 	let httpp=$VAR_G+40
 	let httpsp=$VAR_G+30
@@ -87,7 +87,7 @@ if [ "$VAR_A" = "start" ]; then
 	cd /home/$VAR_C/vstreams/$VAR_D
     
     	screen -A -m -d -S vstreams$VAR_C-X $VAR_F
-	check=`ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X"`
+	check=$(ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X")
 
 	if [ -n "$check" ]; then
 	    echo "`date` - Stream /home/$VAR_B/vstreams/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
@@ -107,9 +107,9 @@ if [ "$VAR_A" = "stop" ]; then
 	rm $LOGP/restart/$VAR_B-vstreams-$VAR_C
     fi
 
-    runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X" | awk '{print $2}'\``
-    check=`ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X"`
-    wipe=`screen -wipe`
+    runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X" | awk '{print $2}'`)
+    check=$(ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X")
+    wipe=$(screen -wipe)
 
     if [ ! -n "$check" ]; then
 	echo "`date` - Stream /home/$VAR_B/vstreams/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
