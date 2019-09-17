@@ -21,9 +21,9 @@ if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
 
-LOGF=`date +"%Y_%m"`
-LOGC=`date +"%Y_%m-%H_%M_%S"`
-LOGP=`pwd`
+LOGF=$(date +"%Y_%m")
+LOGC=$(date +"%Y_%m-%H_%M_%S")
+LOGP=$(pwd)
 
 if [ ! -d logs ]; then
     mkdir logs
@@ -68,12 +68,12 @@ if [ "$VAR_A" = "start" ]; then
     cd /home/$VAR_B/apps/$VAR_D
 
     if [ "$VAR_G" = "" ]; then
-	runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}'\``
-	check=`ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X"`
-	wipe=`screen -wipe`
+	runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}'`)
+	check=$(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X")
+	wipe=$(screen -wipe)
 	if [ ! -n "$check" ]; then
 	    screen -A -m -d -S apps$VAR_C-X $VAR_F
-	    check=`ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X"`
+	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X")
 
 	    if [ -n "$check" ]; then
 		echo "`date` - App /home/$VAR_B/apps/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
@@ -88,11 +88,11 @@ if [ "$VAR_A" = "start" ]; then
 	fi
     else
 	if [ -f $VAR_G ]; then
-	    check=`ps -p \`cat $VAR_G\` | grep -i "$VAR_H"`
+	    check=$(ps -p \`cat $VAR_G\` | grep -i "$VAR_H")
 	    if [ -n "$check" ]; then
-		runchk=`kill -9 \`cat $VAR_G\``
+		runchk=$(kill -9 `cat $VAR_G`)
 	    fi
-	    check=`ps -p \`cat $VAR_G\` | grep -i "$VAR_H"`
+	    check=$(ps -p `cat $VAR_G` | grep -i "$VAR_H")
 	    rm $VAR_G
 	fi
 	if [ ! -n "$check" ]; then
@@ -124,16 +124,16 @@ if [ "$VAR_A" = "stop" ]; then
 	check=`$LOGP/includes/stop/$VAR_E '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H' '$VAR_I' '$VAR_J'`
     else
     if [ "$VAR_G" = "" ]; then
-	runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}'\``
-	check=`ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X"`
-	wipe=`screen -wipe`
+	runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}'`)
+	check=$(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X")
+	wipe=$(screen -wipe)
     else
 	if [ -f $VAR_G ]; then
-	    check=`ps -p \`cat $VAR_G\` | grep -i "$VAR_F"`
+	    check=$(ps -p `cat $VAR_G` | grep -i "$VAR_F")
 	    if [ -n "$check" ]; then
-	        runchk=`kill -9 \`cat $VAR_G\``
+	        runchk=$(kill -9 `cat $VAR_G`)
 	    fi
-	    check=`ps -p \`cat $VAR_G\` | grep -i "$VAR_F"`
+	    check=$(ps -p `cat $VAR_G` | grep -i "$VAR_F")
 	    rm $VAR_G
         fi
     fi
@@ -150,7 +150,7 @@ fi
 
 if [ "$VAR_A" = "content" ]; then
     cd /home/$VAR_B/apps/$VAR_D
-    check=`cat $VAR_E`
+    check=$(cat $VAR_E)
     for LINE in $check
     do
     	echo "$LINE%TEND%"
@@ -158,9 +158,9 @@ if [ "$VAR_A" = "content" ]; then
 fi
 
 if [ "$VAR_A" = "update" ]; then
-    startchk=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X"`
+    startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
     if [ ! -n "$startchk" ]; then
-	runscr=`screen -A -m -d -S b$VAR_B$VAR_D-X ./apps updaterun "$VAR_B" "$VAR_C" "$VAR_D"`
+	runscr=$(screen -A -m -d -S b$VAR_B$VAR_D-X ./apps updaterun "$VAR_B" "$VAR_C" "$VAR_D")
     	echo "ID1"
     else
         echo "`date` - Update of /home/$VAR_B/apps/$VAR_D cant be installed" >> $LOGP/logs/$LOGF.txt
@@ -171,7 +171,7 @@ fi
 if [ "$VAR_A" = "updaterun" ]; then
     sleep 2
     cd /home/$VAR_B/apps/$VAR_D
-    comlist=`echo "$VAR_E" | sed -e 's/;/\n/g'`
+    comlist=$(echo "$VAR_E" | sed -e 's/;/\n/g')
     while read LINE
     do
     	if [ "$LINE" != "" ]; then
@@ -182,7 +182,7 @@ if [ "$VAR_A" = "updaterun" ]; then
 fi
 
 if [ "$VAR_A" = "online" ]; then
-    check=`ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X"`
+    check=$(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X")
     if [ -n "$check" ]; then
 	echo "ID1"
     else
@@ -192,7 +192,7 @@ fi
 
 
 if [ "$VAR_A" = "status" ]; then
-    check=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_E$VAR_B$VAR_D-X"`
+    check=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_E$VAR_B$VAR_D-X")
     if [ ! -n "$check" ]; then
 	echo "ID1"
     else
