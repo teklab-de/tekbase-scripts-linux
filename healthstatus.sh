@@ -7,7 +7,6 @@
 #          teklab.net
 
 VAR_A=$1
-VAR_B=$2
 VAR_C=$3
 
 checkpasswd() {
@@ -33,7 +32,7 @@ if [ "$VAR_A" = "cpu" ]; then
 
     counter=0
     while [ $counter != 2 ]; do
-	for (( i=0; $i < $cpucores; i++ )); do
+	for (( i=0; i < $cpucores; i++ )); do
 	    cpudata=$(grep ^"cpu"$i /proc/stat)
 	    busyticks=$(echo $cpudata | awk -F' ' '{printf "%.0f",$2+$3+$4+$7+$8-$BL}')
 	    totalticks=$(echo $cpudata | awk -F' ' '{printf "%.0f",$2+$3+$4+$5+$6+$7+$8}')
@@ -91,7 +90,7 @@ if [ "$VAR_A" = "dedicated" ]; then
     if [ "$cpuinfo" = "" ]; then
         cpuinfo=$(grep -m 1 -i "model name" /proc/cpuinfo | sed 's/model name/"name":"/g' | sed 's/^[ \t]*//' | sed 's/[[:space:]]:[[:space:]]\+//g' | sed 's/$/"/g' | tr "\n" ",")
     fi
-    cputemp=`sensors | grep -i "temp1:" | awk '{print "\"temp\":\""$2"\",\"critic\":\""$5"\""}' | sed 's/[+°C)]//g' | uniq -u`
+    cputemp=$(sensors | grep -i "temp1:" | awk '{print "\"temp\":\""$2"\",\"critic\":\""$5"\""}' | sed 's/[+°C)]//g' | uniq -u)
 #    traffic=`vnstat | grep -i "$VAR_B" | sed 's/KiB/KB/g' | sed 's/MiB/MB/g' | sed 's/GiB/GB/g' | awk '{print "$3,$4"$6,$7}'`
     ipv4=$(ifconfig | grep -v "127.0.0.1" | awk -v i=1 '/inet addr/{print "\""i++"\":\""substr($2,6)"\""}' | tr "\n" ",")
     trafficdays=$(vnstat -i $(ip route | column -t | awk '{print $5}' | head -n1) -d | grep -v "eth\|day\|estimated\|-" | sed 's/KiB/KB/g' | sed 's/MiB/MB/g' | sed 's/GiB/GB/g' | sed 's/TiB/TB/g' | sed 's/\//./g' | awk 'NR>2 {print "{\"date\":\""$1"\",\"rx\":\""$2,$3"\",\"tx\":\""$5,$6"\"}"}' | tr "\n" ",")
