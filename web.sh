@@ -17,7 +17,6 @@ if [ "$VAR_A" = "" ]; then
 fi
 
 LOGF=$(date +"%Y_%m")
-LOGC=$(date +"%Y_%m-%H_%M_%S")
 LOGP=$(pwd)
 
 if [ ! -d logs ]; then
@@ -37,8 +36,8 @@ fi
 
 if [ "$VAR_A" = "dbcreate" ]; then
     if [ -f /etc/mysql/settings.ini ]; then
-        mysqlpwd=$(cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}')
-        mysqlusr=$(cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}')
+        mysqlpwd=$(grep -i password /etc/mysql/settings.ini | awk '{print $2}')
+        mysqlusr=$(grep -i login /etc/mysql/settings.ini | awk '{print $2}')
 
         Q1="CREATE DATABASE IF NOT EXISTS $VAR_C;"
         Q2="GRANT ALL PRIVILEGES ON $VAR_C.* TO '$VAR_D'@'%' IDENTIFIED BY '$VAR_E' WITH GRANT OPTION;"
@@ -54,8 +53,8 @@ fi
 
 if [ "$VAR_A" = "dbdelete" ]; then
     if [ -f /etc/mysql/settings.ini ]; then
-        mysqlpwd=$(cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}')
-        mysqlusr=$(cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}')
+        mysqlpwd=$(grep -i password /etc/mysql/settings.ini | awk '{print $2}')
+        mysqlusr=$(grep -i login /etc/mysql/settings.ini | awk '{print $2}')
 
         Q1="DROP DATABASE $VAR_C;"
         Q2="DROP USER $VAR_D@'%';"	
@@ -71,8 +70,8 @@ fi
 
 if [ "$VAR_A" = "dbrename" ]; then
     if [ -f /etc/mysql/settings.ini ]; then
-        mysqlpwd=$(cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}')
-        mysqlusr=$(cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}')
+        mysqlpwd=$(grep -i password /etc/mysql/settings.ini | awk '{print $2}')
+        mysqlusr=$(grep -i login /etc/mysql/settings.ini | awk '{print $2}')
 
         mysqldump --user=$mysqlusr --password=$mysqlpwd $VAR_C > $VAR_C.sql
         Q1="CREATE DATABASE IF NOT EXISTS $VAR_D;"
@@ -97,8 +96,8 @@ fi
 
 if [ "$VAR_A" = "dbpasswd" ]; then
     if [ -f /etc/mysql/settings.ini ]; then
-        mysqlpwd=$(cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}')
-        mysqlusr=$(cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}')
+        mysqlpwd=$(grep -i password /etc/mysql/settings.ini | awk '{print $2}')
+        mysqlusr=$(grep -i login /etc/mysql/settings.ini | awk '{print $2}')
 
         Q1="UPDATE mysql.user SET Password=PASSWORD('$VAR_D') WHERE User='$VAR_C';"
         Q2="FLUSH PRIVILEGES;"
