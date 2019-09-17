@@ -18,9 +18,6 @@ if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
 
-LOGDAY=$(date +"%Y-%m-%d")
-LOGMONTH=$(date +"%Y-%m")
-
 LOGF=$(date +"%Y_%m")
 LOGP=$(pwd)
 
