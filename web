@@ -1,10 +1,10 @@
 #! /bin/bash
 
 # TekLabs TekBase
-# Copyright 2005-2015 TekLab
+# Copyright since 2005 TekLab
 # Christian Frankenstein
-# Website: www.teklab.de
-#          www.teklab.us
+# Website: teklab.de
+#          teklab.net
 
 VAR_A=$1
 VAR_B=$2
@@ -21,9 +21,9 @@ if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
 
-LOGF=`date +"%Y_%m"`
-LOGC=`date +"%Y_%m-%H_%M_%S"`
-LOGP=`pwd`
+LOGF=$(date +"%Y_%m")
+LOGC=$(date +"%Y_%m-%H_%M_%S")
+LOGP=$(pwd)
 
 if [ ! -d logs ]; then
     mkdir logs
@@ -42,77 +42,78 @@ fi
 
 if [ "$VAR_A" = "dbcreate" ]; then
     if [ -f /etc/mysql/settings.ini ]; then
-		mysqlpwd=`cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}'`
-		mysqlusr=`cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}'`
+        mysqlpwd=$(cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}')
+        mysqlusr=$(cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}')
 
-		Q1="CREATE DATABASE IF NOT EXISTS $VAR_C;"
-		Q2="GRANT ALL PRIVILEGES ON $VAR_C.* TO '$VAR_D'@'%' IDENTIFIED BY '$VAR_E' WITH GRANT OPTION;"
-		Q3="FLUSH PRIVILEGES;"
-		SQL="${Q1}${Q2}${Q3}"
+        Q1="CREATE DATABASE IF NOT EXISTS $VAR_C;"
+        Q2="GRANT ALL PRIVILEGES ON $VAR_C.* TO '$VAR_D'@'%' IDENTIFIED BY '$VAR_E' WITH GRANT OPTION;"
+        Q3="FLUSH PRIVILEGES;"
+        SQL="${Q1}${Q2}${Q3}"
 
-		sqlcreate=`mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"`
-		echo "ID1"
-	else
-		echo "ID2"
-	fi
+        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        echo "ID1"
+    else
+        echo "ID2"
+    fi
 fi
 
 if [ "$VAR_A" = "dbdelete" ]; then
     if [ -f /etc/mysql/settings.ini ]; then
-		mysqlpwd=`cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}'`
-		mysqlusr=`cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}'`
+        mysqlpwd=$(cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}')
+        mysqlusr=$(cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}')
 
-		Q1="DROP DATABASE $VAR_C;"
-		Q2="DROP USER $VAR_D@'%';"	
-		Q3="FLUSH PRIVILEGES;"
-		SQL="${Q1}${Q2}"
+        Q1="DROP DATABASE $VAR_C;"
+        Q2="DROP USER $VAR_D@'%';"	
+        Q3="FLUSH PRIVILEGES;"
+        SQL="${Q1}${Q2}"
 
-		sqlcreate=`mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"`
-		echo "ID1"
-	else
-		echo "ID2"			
-	fi
+        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        echo "ID1"
+    else
+        echo "ID2"			
+    fi
 fi
 
 if [ "$VAR_A" = "dbrename" ]; then
     if [ -f /etc/mysql/settings.ini ]; then
-		mysqlpwd=`cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}'`
-		mysqlusr=`cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}'`
+        mysqlpwd=$(cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}')
+        mysqlusr=$(cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}')
 
-		mysqldump --user=$mysqlusr --password=$mysqlpwd $VAR_C > $VAR_C.sql
-		Q1="CREATE DATABASE IF NOT EXISTS $VAR_D;"
-		SQL="${Q1}"
+        mysqldump --user=$mysqlusr --password=$mysqlpwd $VAR_C > $VAR_C.sql
+        Q1="CREATE DATABASE IF NOT EXISTS $VAR_D;"
+        SQL="${Q1}"
 		
-		sqlcreate=`mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"`
-		sqlcreate=`mysql --user=$mysqlusr --password=$mysqlpwd $VAR_D < $VAR_C.sql`		
+        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd $VAR_D < $VAR_C.sql)		
 				
-		Q1="GRANT ALL PRIVILEGES ON $VAR_D.* TO '$VAR_E'@'%';"
-		Q2="REVOKE ALL PRIVILEGES ON $VAR_C.* FROM '$VAR_E'@'%';"
-		Q3="DROP DATABASE $VAR_C;"
-		Q4="FLUSH PRIVILEGES;"
-		SQL="${Q1}${Q2}${Q3}${Q4}"
+        Q1="GRANT ALL PRIVILEGES ON $VAR_D.* TO '$VAR_E'@'%';"
+        Q2="REVOKE ALL PRIVILEGES ON $VAR_C.* FROM '$VAR_E'@'%';"
+        Q3="DROP DATABASE $VAR_C;"
+        Q4="FLUSH PRIVILEGES;"
+        SQL="${Q1}${Q2}${Q3}${Q4}"
 
-		sqlcreate=`mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"`
-		rm $VAR_C.sql
-		echo "ID1"
-	else
-		echo "ID2"			
-	fi
+        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        rm $VAR_C.sql
+        echo "ID1"
+    else
+        echo "ID2"			
+    fi
 fi
 
 if [ "$VAR_A" = "dbpasswd" ]; then
     if [ -f /etc/mysql/settings.ini ]; then
-		mysqlpwd=`cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}'`
-		mysqlusr=`cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}'`
+        mysqlpwd=$(cat /etc/mysql/settings.ini | grep -i password | awk '{print $2}')
+        mysqlusr=$(cat /etc/mysql/settings.ini | grep -i login | awk '{print $2}')
 
-		Q1="UPDATE mysql.user SET Password=PASSWORD('$VAR_D') WHERE User='$VAR_C';"
-		Q2="FLUSH PRIVILEGES;"
-		SQL="${Q1}${Q2}"
+        Q1="UPDATE mysql.user SET Password=PASSWORD('$VAR_D') WHERE User='$VAR_C';"
+        Q2="FLUSH PRIVILEGES;"
+        SQL="${Q1}${Q2}"
 
-		sqlcreate=`mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"`
-		echo "ID1"
-	else
-		echo "ID2"			
-	fi
+        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        echo "ID1"
+    else
+        echo "ID2"			
+    fi
 fi
+
 exit 0
