@@ -3,8 +3,8 @@
 # TekLabs TekBase
 # Copyright since 2005 TekLab
 # Christian Frankenstein
-# Website: www.teklab.de
-#          www.teklab.us
+# Website: teklab.de
+#          teklab.net
 
 VAR_A=$1
 VAR_B=$2
