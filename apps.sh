@@ -22,7 +22,6 @@ if [ "$VAR_A" = "" ]; then
 fi
 
 LOGF=$(date +"%Y_%m")
-LOGC=$(date +"%Y_%m-%H_%M_%S")
 LOGP=$(pwd)
 
 if [ ! -d logs ]; then
@@ -68,9 +67,9 @@ if [ "$VAR_A" = "start" ]; then
     cd /home/$VAR_B/apps/$VAR_D
 
     if [ "$VAR_G" = "" ]; then
-	runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}'`)
+	kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}'`
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X")
-	wipe=$(screen -wipe)
+	screen -wipe
 	if [ ! -n "$check" ]; then
 	    screen -A -m -d -S apps$VAR_C-X $VAR_F
 	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X")
@@ -90,7 +89,7 @@ if [ "$VAR_A" = "start" ]; then
 	if [ -f $VAR_G ]; then
 	    check=$(ps -p \`cat $VAR_G\` | grep -i "$VAR_H")
 	    if [ -n "$check" ]; then
-		runchk=$(kill -9 `cat $VAR_G`)
+		kill -9 `cat $VAR_G`
 	    fi
 	    check=$(ps -p `cat $VAR_G` | grep -i "$VAR_H")
 	    rm $VAR_G
@@ -123,20 +122,20 @@ if [ "$VAR_A" = "stop" ]; then
     if [ -f $LOGP/includes/stop/$VAR_E ]; then
 	check=`$LOGP/includes/stop/$VAR_E '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H' '$VAR_I' '$VAR_J'`
     else
-    if [ "$VAR_G" = "" ]; then
-	runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}'`)
-	check=$(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X")
-	wipe=$(screen -wipe)
-    else
-	if [ -f $VAR_G ]; then
-	    check=$(ps -p `cat $VAR_G` | grep -i "$VAR_F")
-	    if [ -n "$check" ]; then
-	        runchk=$(kill -9 `cat $VAR_G`)
-	    fi
-	    check=$(ps -p `cat $VAR_G` | grep -i "$VAR_F")
-	    rm $VAR_G
+        if [ "$VAR_G" = "" ]; then
+	    kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}'`
+	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X")
+	    screen -wipe
+        else
+	    if [ -f $VAR_G ]; then
+	        check=$(ps -p `cat $VAR_G` | grep -i "$VAR_F")
+	        if [ -n "$check" ]; then
+	            kill -9 `cat $VAR_G`
+	        fi
+	        check=$(ps -p `cat $VAR_G` | grep -i "$VAR_F")
+	        rm $VAR_G
+            fi
         fi
-    fi
     fi
 
     if [ ! -n "$check" ]; then
@@ -158,9 +157,9 @@ if [ "$VAR_A" = "content" ]; then
 fi
 
 if [ "$VAR_A" = "update" ]; then
-    startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
-    if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S b$VAR_B$VAR_D-X ./apps updaterun "$VAR_B" "$VAR_C" "$VAR_D")
+    check=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
+    if [ ! -n "$check" ]; then
+	screen -A -m -d -S b$VAR_B$VAR_D-X ./apps updaterun "$VAR_B" "$VAR_C" "$VAR_D"
     	echo "ID1"
     else
         echo "`date` - Update of /home/$VAR_B/apps/$VAR_D cant be installed" >> $LOGP/logs/$LOGF.txt
