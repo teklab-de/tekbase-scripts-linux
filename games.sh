@@ -13,20 +13,13 @@ VAR_D=$4
 VAR_E=$5
 VAR_F=$6
 VAR_G=$7
-VAR_H=$8
-VAR_I=$9
-VAR_J=${10}
 
 if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
 
-LOGDAY=`date +"%Y-%m-%d"`
-LOGMONTH=`date +"%Y-%m"`
-
-LOGF=`date +"%Y_%m"`
-LOGC=`date +"%Y_%m-%H_%M_%S"`
-LOGP=`pwd`
+LOGF=$(date +"%Y_%m")
+LOGP=$(pwd)
 
 if [ ! -d logs ]; then
     mkdir logs
@@ -55,7 +48,7 @@ if [ "$VAR_A" = "start" ]; then
     echo "HOME=\"/home/$VAR_B\";" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "check=\`ps aux | grep -v grep | grep -i screen | grep -i \"server$VAR_C-X\"\`" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "if [ ! -n \"\$check\" ]; then" >> $LOGP/restart/$VAR_B-server-$VAR_C
-    echo "cd $LOGP;sudo -u $VAR_B ./games 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H' '$VAR_I' '$VAR_J'" >> $LOGP/restart/$VAR_B-server-$VAR_C
+    echo "cd $LOGP;sudo -u $VAR_B ./games 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G'" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "fi" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "exit 0" >> $LOGP/restart/$VAR_B-server-$VAR_C
     chmod 0755 $LOGP/restart/$VAR_B-server-$VAR_C
@@ -65,9 +58,9 @@ if [ "$VAR_A" = "start" ]; then
     if [ -f $LOGP/includes/$VAR_E/stop ]; then
 	$LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D"
     else
-	runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}'\``
-	check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
-	wipe=`screen -wipe`
+	kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}')
+	check=$(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X")
+	screen -wipe
     fi
 
     if [ ! -n "$check" ]; then
@@ -86,18 +79,18 @@ if [ "$VAR_A" = "start" ]; then
 	    else
 		screen -A -m -d -L -S server$VAR_C-X $VAR_F
 	    fi
-	    check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
+	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X")
 	fi
 
 	if [ -n "$check" ]; then
-	    echo "`date` - Game /home/$VAR_B/server/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Game /home/$VAR_B/server/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
 	    echo "ID1"
 	else
-	    echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Game /home/$VAR_B/server/$VAR_D cant be started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
 	    echo "ID2"
 	fi
     else
-	echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be stopped and restarted ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - Game /home/$VAR_B/server/$VAR_D cant be stopped and restarted ($VAR_F)" >> $LOGP/logs/$LOGF.txt
 	echo "ID3"
     fi
 fi
@@ -110,16 +103,16 @@ if [ "$VAR_A" = "stop" ]; then
     if [ -f $LOGP/includes/$VAR_E/stop ]; then
         $LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D"
     else
-        runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}'\``
-        check=`ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X"`
-        wipe=`screen -wipe`
+        kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}')
+        check=$(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X")
+        screen -wipe
     fi
 
     if [ ! -n "$check" ]; then
-        echo "`date` - Game /home/$VAR_B/server/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Game /home/$VAR_B/server/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
         echo "ID1"
     else
-        echo "`date` - Game /home/$VAR_B/server/$VAR_D cant be stopped" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Game /home/$VAR_B/server/$VAR_D cant be stopped" >> $LOGP/logs/$LOGF.txt
         echo "ID2"
     fi
 fi
@@ -130,7 +123,7 @@ if [ "$VAR_A" = "rewrite" ]; then
         sed -e "/$VAR_F/Ic\\$VAR_G" $VAR_E > backup.tek
         rm $VAR_E
         mv backup.tek $VAR_E
-        check=`cat $VAR_E | grep -i "$VAR_G"`
+        check=$(grep -i "$VAR_G" $VAR_E)
         if [ ! -n "$check" ]; then
             echo "" >> $VAR_E
             echo "$VAR_G" >> $VAR_E
@@ -139,17 +132,17 @@ if [ "$VAR_A" = "rewrite" ]; then
 fi
 
 if [ "$VAR_A" = "update" ]; then
-    startchk=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X"`
+    startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
     if [ ! -n "$startchk" ]; then
-        runscr=`screen -A -m -d -S b$VAR_B$VAR_D-X ./games updaterun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E"`
-        check=`ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X"`
+        screen -A -m -d -S b$VAR_B$VAR_D-X ./games updaterun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E"
+        check=$(ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X")
         if [ ! -n "$check" ]; then
             echo "ID2"
         else
             echo "ID1"
         fi
     else
-        echo "`date` - Update of /home/$VAR_B/server/$VAR_D cant be installed" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Update of /home/$VAR_B/server/$VAR_D cant be installed" >> $LOGP/logs/$LOGF.txt
         echo "ID2"
     fi
 fi
@@ -157,21 +150,21 @@ fi
 if [ "$VAR_A" = "updaterun" ]; then
     sleep 2
     cd /home/$VAR_B/server/$VAR_D
-    comlist=`echo "$VAR_E" | sed -e 's/;/\n/g'`
+    comlist=$(echo "$VAR_E" | sed -e 's/;/\n/g')
     while read LINE
     do
 	if [ "$LINE" != "" ]; then
 	    $LINE
 	fi
     done < <(echo "$comlist")
-    echo "`date` - Update of /home/$VAR_B/server/$VAR_D was installed" >> $LOGP/logs/$LOGF.txt
+    echo "$(date) - Update of /home/$VAR_B/server/$VAR_D was installed" >> $LOGP/logs/$LOGF.txt
 fi
 
 if [ "$VAR_A" = "create" ]; then
-    startchk=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X"`
+    startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
     if [ ! -n "$startchk" ]; then
-        runscr=`screen -A -m -d -S b$VAR_B$VAR_D-X ./games createrun "$VAR_B" "$VAR_C" "$VAR_D"`
-        check=`ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X"`
+        screen -A -m -d -S b$VAR_B$VAR_D-X ./games createrun "$VAR_B" "$VAR_C" "$VAR_D"
+        check=$(ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X")
         if [ ! -n "$check" ]; then
             cd /home/$VAR_B/server
             if [ ! -f $VAR_D.tar ]; then
@@ -183,7 +176,7 @@ if [ "$VAR_A" = "create" ]; then
             echo "ID1"
         fi
     else
-        echo "`date` - Backup of /home/$VAR_B/server/$VAR_D cant be created" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Backup of /home/$VAR_B/server/$VAR_D cant be created" >> $LOGP/logs/$LOGF.txt
         echo "ID2"
     fi
 fi
@@ -201,24 +194,24 @@ if [ "$VAR_A" = "createrun" ]; then
     fi
     mv /home/skripte/startscripte/$VAR_D-start.sh /home/$VAR_B/server/$VAR_D/start.sh
     if [ ! -f $VAR_D.tar ]; then
-        echo "`date` - Backup of /home/$VAR_B/server/$VAR_D cant be created" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Backup of /home/$VAR_B/server/$VAR_D cant be created" >> $LOGP/logs/$LOGF.txt
     else
-        echo "`date` - Backup of /home/$VAR_B/server/$VAR_D was created" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Backup of /home/$VAR_B/server/$VAR_D was created" >> $LOGP/logs/$LOGF.txt
     fi
 fi
 
 if [ "$VAR_A" = "extract" ]; then
-    startchk=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X"`
+    startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
     if [ ! -n "$startchk" ]; then
-        runscr=`screen -A -m -d -S b$VAR_B$VAR_D-X ./games extractrun "$VAR_B" "$VAR_C" "$VAR_D"`
-        check=`ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X"`
+        screen -A -m -d -S b$VAR_B$VAR_D-X ./games extractrun "$VAR_B" "$VAR_C" "$VAR_D"
+        check=$(ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X")
         if [ ! -n "$check" ]; then
             echo "ID2"
         else
             echo "ID1"
         fi
     else
-        echo "`date` - Backup of /home/$VAR_B/server/$VAR_D cant be extracted" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Backup of /home/$VAR_B/server/$VAR_D cant be extracted" >> $LOGP/logs/$LOGF.txt
         echo "ID2"
     fi
 fi
@@ -229,21 +222,21 @@ if [ "$VAR_A" = "extractrun" ]; then
     mv start.sh /home/skripte/startscripte/$VAR_D-start.sh
     cd /home/$VAR_B/server
     if [ ! -f $VAR_D.tar ]; then
-        echo "`date` - Backup of /home/$VAR_B/server/$VAR_D cant be extracted" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Backup of /home/$VAR_B/server/$VAR_D cant be extracted" >> $LOGP/logs/$LOGF.txt
     else
         rm -rf $VAR_D
         tar -xf $VAR_D.tar
         mv /home/skripte/startscripte/$VAR_D-start.sh /home/$VAR_B/server/$VAR_D/start.sh
     fi
     if [ ! -d $VAR_D ]; then
-        echo "`date` - Backup of /home/$VAR_B/server/$VAR_D cant be extracted" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Backup of /home/$VAR_B/server/$VAR_D cant be extracted" >> $LOGP/logs/$LOGF.txt
     else
-        echo "`date` - Backup of /home/$VAR_B/server/$VAR_D was extracted" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Backup of /home/$VAR_B/server/$VAR_D was extracted" >> $LOGP/logs/$LOGF.txt
     fi
 fi
 
 if [ "$VAR_A" = "check" ]; then
-    check=`ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X"`
+    check=$(ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X")
     if [ ! -n "$check" ]; then
         cd /home/$VAR_B/server
         if [ ! -f $VAR_D.tar ]; then
@@ -257,7 +250,7 @@ if [ "$VAR_A" = "check" ]; then
 fi
 
 if [ "$VAR_A" = "status" ]; then
-    check=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_E$VAR_B$VAR_D-X"`
+    check=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_E$VAR_B$VAR_D-X")
     if [ ! -n "$check" ]; then
         echo "ID1"
     else
@@ -268,9 +261,9 @@ fi
 if [ "$VAR_A" = "maplist" ]; then
     cd /home/$VAR_B/server/$VAR_D/$VAR_E
     if [ "$VAR_G" = "yes" ]; then
-        maplist=`find -name "*.$VAR_F" -printf "%f\n"`
+        maplist=$(find -name "*.$VAR_F" -printf "%f\n")
     else
-        maplist=`find -name "*.$VAR_F"`    
+        maplist=$(find -name "*.$VAR_F")
     fi
     for LINE in $maplist
     do
@@ -279,10 +272,10 @@ if [ "$VAR_A" = "maplist" ]; then
 fi
 
 if [ "$VAR_A" = "install" ]; then
-    startchk=`ps aux | grep -v grep | grep -i screen | grep -i "ma$VAR_B$VAR_E-X"`
+    startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "ma$VAR_B$VAR_E-X")
     if [ ! -n "$startchk" ]; then
-        runscr=`screen -A -m -d -S ma$VAR_B$VAR_E-X ./games installrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"`
-        check=`ps aux | grep -v grep | grep -i screen | grep -i "ma$VAR_B$VAR_E-X"`
+        screen -A -m -d -S ma$VAR_B$VAR_E-X ./games installrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"
+        check=$(ps aux | grep -v grep | grep -i screen | grep -i "ma$VAR_B$VAR_E-X")
     fi
     if [ ! -n "$check" ]; then
         echo "ID2"
@@ -296,28 +289,28 @@ if [ "$VAR_A" = "installrun" ]; then
     cd /home/$VAR_B/server/$VAR_D
     wget $VAR_G/$VAR_F/$VAR_E.tar
     if [ ! -f $VAR_E.tar ]; then
-        echo "`date` - Image $VAR_E.tar cant be downloaded" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Image $VAR_E.tar cant be downloaded" >> $LOGP/logs/$LOGF.txt
     else
-        echo "`date` - Image $VAR_E.tar was downloaded" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Image $VAR_E.tar was downloaded" >> $LOGP/logs/$LOGF.txt
         tar -xf $VAR_E.tar
         rm $VAR_E.tar
-        echo "`date` - Addon/Mod $VAR_E was installed" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Addon/Mod $VAR_E was installed" >> $LOGP/logs/$LOGF.txt
     fi
     if [ -f $VAR_E-install.sh ]; then
         chmod 777 $VAR_E-install.sh
         ./$VAR_E-install.sh
         rm $VAR_E-install.sh
-        echo "`date` - Addon/Mod $VAR_E-install.sh complete" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Addon/Mod $VAR_E-install.sh complete" >> $LOGP/logs/$LOGF.txt
     else
-        echo "`date` - Addon/Mod Image $VAR_E.tar does not contain $VAR_E-install.sh" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Addon/Mod Image $VAR_E.tar does not contain $VAR_E-install.sh" >> $LOGP/logs/$LOGF.txt
     fi
 fi
 
 if [ "$VAR_A" = "remove" ]; then
-    startchk=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B$VAR_E-X"`
+    startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B$VAR_E-X")
     if [ ! -n "$startchk" ]; then
-        runscr=`screen -A -m -d -S $VAR_F$VAR_B$VAR_E-X ./games removerun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"`
-        check=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B$VAR_E-X"`
+        screen -A -m -d -S $VAR_F$VAR_B$VAR_E-X ./games removerun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"
+        check=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B$VAR_E-X")
     fi
     if [ ! -n "$check" ]; then
         echo "ID2"
@@ -331,35 +324,35 @@ if [ "$VAR_A" = "removerun" ]; then
     cd /home/$VAR_B/server/$VAR_D
     wget $VAR_G/$VAR_F/$VAR_E.lst
     if [ ! -f $VAR_E.lst ]; then
-        echo "`date` - File list $VAR_E.lst cant be downloaded" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - File list $VAR_E.lst cant be downloaded" >> $LOGP/logs/$LOGF.txt
     else
-        echo "`date` - File list $VAR_E.lst was downloaded" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - File list $VAR_E.lst was downloaded" >> $LOGP/logs/$LOGF.txt
         counter=0
-        for FILE in `cat $VAR_E.lst`
+        for FILE in $(cat $VAR_E.lst)
         do
             rm -r $FILE
             counter=1
         done
         rm $VAR_E.lst
         if [ $counter = 1 ]; then
-            echo "`date` - Addon/Mod $VAR_E was deleted" >> $LOGP/logs/$LOGF.txt
+            echo "$(date) - Addon/Mod $VAR_E was deleted" >> $LOGP/logs/$LOGF.txt
         fi
     fi
     wget $VAR_G/$VAR_F/$VAR_E-uninstall.sh
     if [ ! -f $VAR_F-uninstall.sh ]; then
-        echo "`date` - Uninstall File $VAR_E-uninstall.sh cant be downloaded" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Uninstall File $VAR_E-uninstall.sh cant be downloaded" >> $LOGP/logs/$LOGF.txt
     else
-        echo "`date` - Uninstall File $VAR_E-uninstall.sh was downloaded" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Uninstall File $VAR_E-uninstall.sh was downloaded" >> $LOGP/logs/$LOGF.txt
         chmod 777 $VAR_E-uninstall.sh
         ./$VAR_E-uninstall.sh
         rm $VAR_E-uninstall.sh
-        echo "`date` - Addon/Mod $VAR_E-uninstall.sh was successfull" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - Addon/Mod $VAR_E-uninstall.sh was successfull" >> $LOGP/logs/$LOGF.txt
     fi
 fi
 
 
 if [ "$VAR_A" = "screen" ]; then
-    check=`cat /home/$VAR_B/server/$VAR_D/$VAR_E`
+    check=$(cat /home/$VAR_B/server/$VAR_D/$VAR_E)
     echo "$check"
 fi
 
@@ -372,20 +365,20 @@ if [ "$VAR_A" = "screensend" ]; then
         screen -S server$VAR_C-X -p 0 -X stuff "$VAR_F"
         screen -S server$VAR_C-X -p 0 -X stuff $'\n'
     fi
-    check=`cat /home/$VAR_B/server/$VAR_D/$VAR_E`
+    check=$(cat /home/$VAR_B/server/$VAR_D/$VAR_E)
     echo "$check"
 fi
 
 if [ "$VAR_A" = "totalprotect" ]; then
-    check=`netstat -tulpn | awk '{print $4}' | grep -i "$VAR_E"`
+    check=$(netstat -tulpn | awk '{print $4}' | grep -i "$VAR_E")
     if [ -n "$check" ]; then
         echo "ID2"
     else
         if [ -d $LOGP/cache/$VAR_B$VAR_D ]; then
-            filecount=`ls $LOGP/cache/$VAR_B$VAR_D | wc -l`
+            filecount=$(ls $LOGP/cache/$VAR_B$VAR_D | wc -l)
             if [ $filecount -gt 1 ]; then
 	        cd $LOGP/cache/$VAR_B$VAR_D
-	        filelist=`ls`
+	        filelist=$(ls)
 	        for LINE in $filelist
 	        do
 	            if [ -d $LINE ]; then
@@ -404,5 +397,6 @@ if [ "$VAR_A" = "totalprotect" ]; then
         fi
     fi
 fi
+
 
 exit 0
