@@ -1,10 +1,10 @@
 #! /bin/bash
 
 # TekLabs TekBase
-# Copyright 2005-2015 TekLab
+# Copyright since 2005 TekLab
 # Christian Frankenstein
-# Website: www.teklab.de
-#          www.teklab.us
+# Website: teklab.de
+#          teklab.net
 
 VAR_A=$1
 VAR_B=$2
@@ -38,8 +38,8 @@ if [ ! -d restart ]; then
 fi
 
 if [ ! -f "logs/$LOGF.txt" ]; then
-   echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
-   chmod 0666 $LOGP/logs/$LOGF.txt
+    echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
+    chmod 0666 $LOGP/logs/$LOGF.txt
 fi
 
 if [ "$VAR_A" = "start" ]; then
@@ -136,9 +136,9 @@ if [ "$VAR_A" = "start" ]; then
 	echo $! > $VAR_E.pid
 
 	if [ -f $VAR_E.pid ]; then
-		if [ -f sc_serv_$VAR_G.pid]; then
-			rm sc_serv_$VAR_G.pid
-		fi
+            if [ -f sc_serv_$VAR_G.pid ]; then
+                rm sc_serv_$VAR_G.pid
+            fi
 	    echo "`date` - Stream /home/$VAR_B/streams/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
 	    echo "ID1"
 	else
@@ -153,7 +153,7 @@ fi
 
 if [ "$VAR_A" = "stop" ]; then
     if [ -f $LOGP/restart/$VAR_B-$VAR_E-$VAR_C ]; then
-		rm $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+        rm $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
     fi
 
     cd /home/$VAR_B/streams/$VAR_D
@@ -270,10 +270,10 @@ if [ "$VAR_A" = "playlist" ]; then
 		echo "`date` - Playlist /home/$VAR_B/streams/$VAR_D/playlist.plo cant be created" >> $LOGP/logs/$LOGF.txt
 	    fi
 	fi
-	if [ $VAR_E != "" ]; then
-	    if [ $VAR_F != "" ]; then
+	if [ "$VAR_E" != "" ]; then
+	    if [ "$VAR_F" != "" ]; then
 		cd songs
-	    mkdir -p $VAR_F
+	        mkdir -p $VAR_F
    		cd /home/$VAR_B/streams/$VAR_D
 	    	runfind=`find /home/$VAR_B/streams/$VAR_D/songs/$VAR_F/ -maxdepth 1 -type f \( -name "*.mp3" -o -name "*.acc" \) > /home/$VAR_B/streams/$VAR_D/playlists/$VAR_E.lst`
 		if [ -f $VAR_E.lst ]; then
