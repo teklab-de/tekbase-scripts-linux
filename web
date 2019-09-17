@@ -11,11 +11,6 @@ VAR_B=$2
 VAR_C=$3
 VAR_D=$4
 VAR_E=$5
-VAR_F=$6
-VAR_G=$7
-VAR_H=$8
-VAR_I=$9
-VAR_J=${10}
 
 if [ "$VAR_A" = "" ]; then
     ./tekbase
