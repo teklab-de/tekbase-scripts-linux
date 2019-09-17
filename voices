@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # TekLabs TekBase
-# Copyright 2005-2015 TekLab
+# Copyright since 2005 TekLab
 # Christian Frankenstein
 # Website: www.teklab.de
 #          www.teklab.us
@@ -21,9 +21,9 @@ if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
 
-LOGF=`date +"%Y_%m"`
-LOGC=`date +"%Y_%m-%H_%M_%S"`
-LOGP=`pwd`
+LOGF=$(date +"%Y_%m")
+LOGC=$(date +"%Y_%m-%H_%M_%S")
+LOGP=$(pwd)
 
 if [ ! -d logs ]; then
     mkdir logs
@@ -35,8 +35,8 @@ if [ ! -d restart ]; then
 fi
 
 if [ ! -f "logs/$LOGF.txt" ]; then
-   echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
-   chmod 0666 $LOGP/logs/$LOGF.txt
+    echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
+    chmod 0666 $LOGP/logs/$LOGF.txt
 fi
 
 if [ "$VAR_A" = "start" ]; then
@@ -62,11 +62,11 @@ if [ "$VAR_A" = "start" ]; then
 
     if [ "$VAR_E" = "mumble" ]; then
 	if [ -f murmurd.pid ]; then
-	    check=`ps -p \`cat murmurd.pid\` | grep -i "mumble"`
+	    check=$(ps -p `cat murmurd.pid` | grep -i "mumble")
 	    if [ -n "$check" ]; then
-		runchk=`kill -9 \`cat murmurd.pid\``
+		runchk=$(kill -9 `cat murmurd.pid`)
 	    fi
-	    check=`ps -p \`cat murmurd.pid\` | grep -i "mumble"`
+	    check=$(ps -p `cat murmurd.pid` | grep -i "mumble")
 	    rm murmurd.pid
 	fi
 	if [ ! -n "$check" ]; then
@@ -76,7 +76,7 @@ if [ "$VAR_A" = "start" ]; then
 	    rm backup.ini
 	    sed -e '/host=/c\host='$VAR_H'' mumble-server.ini > backup.ini
 	    rm mumble-server.ini
-	    sed -e '/bitrate=/c\bitrate='$VAR_I'' backup.ini > mumble-server.ini
+	    sed -e '/bandwidth=/c\bandwidth='$VAR_I'' backup.ini > mumble-server.ini
 	    rm backup.ini
 
 	    ./mumble-server -ini mumble-server.ini
@@ -95,9 +95,9 @@ if [ "$VAR_A" = "start" ]; then
 	fi
     fi
     if [ "$VAR_E" = "ventrilo" ]; then
-	runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X" | awk '{print $2}'\``
-	check=`ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X"`
-	wipe=`screen -wipe`
+	runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X" | awk '{print $2}'`)
+	check=$(ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X")
+	wipe=$(screen -wipe)
 	if [ ! -n "$check" ]; then
 	    sed -e '/Port=/c\Port='$VAR_F'' ventrilo_srv.ini > backup.ini
 	    rm ventrilo_srv.ini
@@ -130,19 +130,19 @@ if [ "$VAR_A" = "stop" ]; then
 
     if [ "$VAR_E" = "mumble" ]; then
 	if [ -f murmurd.pid ]; then
-	    check=`ps -p \`cat murmurd.pid\` | grep -i "mumble"`
+	    check=$(ps -p `cat murmurd.pid` | grep -i "mumble")
 	    if [ -n "$check" ]; then
-	        runchk=`kill -9 \`cat murmurd.pid\``
+	        runchk=$(kill -9 `cat murmurd.pid`)
 	    fi
-	    check=`ps -p \`cat murmurd.pid\` | grep -i "mumble"`
+	    check=$(ps -p `cat murmurd.pid` | grep -i "mumble")
 	    rm murmurd.pid
         fi
     fi
     if [ "$VAR_E" = "ventrilo" ]; then
 	if [ "$VAR_C" = "vstreams" ]; then
-	    runchk=`kill -9 \`ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X" | awk '{print $2}'\``
-	    check=`ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X"`
-	    wipe=`screen -wipe`
+	    runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X" | awk '{print $2}'`)
+	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X")
+	    wipe=$(screen -wipe)
 	fi
     fi
 
@@ -157,14 +157,14 @@ fi
 
 if [ "$VAR_A" = "muserlist" ]; then
     cd /home/$VAR_B/voice/$VAR_D
-    userlist=`sqlite3 -html mumble-server.sqlite "SELECT user_id, name FROM users ORDER BY name ASC"`
+    userlist=$(sqlite3 -html mumble-server.sqlite "SELECT user_id, name FROM users ORDER BY name ASC")
     echo $userlist
 fi
 
 if [ "$VAR_A" = "museradd" ]; then
     cd /home/$VAR_B/voice/$VAR_D
-    password=`echo -n $VAR_F | sha1sum | awk '{print $1}'`
-    usercount=`sqlite3 mumble-server.sqlite "SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1"`
+    password=$(echo -n $VAR_F | sha1sum | awk '{print $1}')
+    usercount=$(sqlite3 mumble-server.sqlite "SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1")
     let newid=$usercount+1
     sqlite3 mumble-server.sqlite "INSERT INTO users (server_id, user_id, name, pw) VALUES (1, \"$newid\", \"$VAR_E\", \"$password\")"
     echo "ID1"
@@ -172,7 +172,7 @@ fi
 
 if [ "$VAR_A" = "musermod" ]; then
     cd /home/$VAR_B/voice/$VAR_D
-    password=`echo -n $VAR_E | sha1sum |awk '{print $1}'`
+    password=$(echo -n $VAR_E | sha1sum |awk '{print $1}')
     sqlite3 mumble-server.sqlite "UPDATE users SET pw=\"$password\" WHERE user_id=\"$VAR_F\""
     echo "ID1"
 fi
@@ -185,9 +185,9 @@ fi
 
 if [ "$VAR_A" = "tuserlist" ]; then
     cd /home/user-webi/$VAR_D
-    serverid=`sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\""`
-    userlist=`sqlite -html server.dbs "SELECT i_client_id, s_client_name, b_client_privilege_serveradmin FROM ts2_clients WHERE i_client_server_id=\"$serverid\" ORDER BY s_client_name ASC"`
-    userlist=`echo $userlist | sed -e 's/&/_/g'`
+    serverid=$(sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\"")
+    userlist=$(sqlite -html server.dbs "SELECT i_client_id, s_client_name, b_client_privilege_serveradmin FROM ts2_clients WHERE i_client_server_id=\"$serverid\" ORDER BY s_client_name ASC")
+    userlist=$(echo $userlist | sed -e 's/&/_/g')
     tscounter=0
     tsnewline=""
     for LINE in $userlist
@@ -207,21 +207,21 @@ fi
 if [ "$VAR_A" = "tuseradd" ]; then
     cd /home/user-webi/$VAR_D
     adddate="`date +"%d%m%Y%H%M%S"`00000"
-    serverid=`sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\""`
+    serverid=$(sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\"")
     sqlite server.dbs "INSERT INTO ts2_clients (i_client_server_id, b_client_privilege_serveradmin, s_client_name, s_client_password, dt_client_created) VALUES (\"$serverid\", \"$VAR_I\", \"$VAR_G\", \"$VAR_H\", \"$adddate\")"
     echo "ID1"
 fi
 
 if [ "$VAR_A" = "tusermod" ]; then
     cd /home/user-webi/$VAR_D
-    serverid=`sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\""`
+    serverid=$(sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\"")
     sqlite server.dbs "UPDATE ts2_clients SET b_client_privilege_serveradmin=\"$VAR_I\", s_client_password=\"$VAR_H\" WHERE i_client_id=\"$VAR_G\" AND i_client_server_id=\"$serverid\""
     echo "ID1"
 fi
 
 if [ "$VAR_A" = "tuserdel" ]; then
     cd /home/user-webi/$VAR_D
-    serverid=`sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\""`
+    serverid=$(sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\"")
     sqlite server.dbs "DELETE FROM ts2_clients WHERE i_client_id=\"$VAR_G\" AND i_client_server_id=\"$serverid\""
     echo "ID1"
 fi
@@ -240,7 +240,7 @@ fi
 
 if [ "$VAR_A" = "tserverdel" ]; then
     cd /home/user-webi/$VAR_D
-    serverid=`sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\""`
+    serverid=$(sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\"")
     sqlite server.dbs "DELETE FROM ts2_server_privileges WHERE i_sp_server_id=\"$serverid\""
     sqlite server.dbs "DELETE FROM ts2_channels WHERE i_channel_server_id=\"$serverid\""
     sqlite server.dbs "DELETE FROM ts2_channel_privileges WHERE i_cp_server_id=\"$serverid\""
@@ -252,13 +252,13 @@ fi
 
 if [ "$VAR_A" = "tserverread" ]; then
     cd /home/user-webi/$VAR_D
-    serverid=`sqlite -separator %TD% server.dbs "SELECT s_server_name, s_server_welcomemessage, s_server_password, b_server_clan_server, s_server_webposturl, s_server_weblinkurl FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\""`
+    serverid=$(sqlite -separator %TD% server.dbs "SELECT s_server_name, s_server_welcomemessage, s_server_password, b_server_clan_server, s_server_webposturl, s_server_weblinkurl FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\"")
     echo "$serverid"
 fi
 
 if [ "$VAR_A" = "content" ]; then
     cd /home/$VAR_B/voice/$VAR_D
-    check=`cat $VAR_E`
+    check=$(cat $VAR_E)
     for LINE in $check
     do
     	echo "$LINE%TEND%"
@@ -268,30 +268,29 @@ fi
 if [ "$VAR_A" = "tsdns" ]; then
   cd /home/tsdns
   if [ -f tsdns_settings.ini ]; then
-    sed -e "/$VAR_B/d" tsdns_settings.ini > tsdns_settings.bak
-    mv tsdns_settings.bak tsdns_settings.ini
+      sed -e "/$VAR_B/d" tsdns_settings.ini > tsdns_settings.bak
+      mv tsdns_settings.bak tsdns_settings.ini
   fi
   if [ "$VAR_C" != "" ]; then
-    echo -e "\n$VAR_C=$VAR_B" >> tsdns_settings.ini
+      echo -e "\n$VAR_C=$VAR_B" >> tsdns_settings.ini
   fi
   check=`ps aux | grep -v grep | grep -i "tsdnsserver_linux"`
   if [ ! -n "$check" ]; then
-    if [ -f tsdnsserver_linux_86 ]; then
-      ./tsdnsserver_linux_x86 &
-    fi
-    if [ -f tsdnsserver_linux_amd64 ]; then
-      ./tsdnsserver_linux_amd64 &
-    fi
+      if [ -f tsdnsserver_linux_86 ]; then
+          ./tsdnsserver_linux_x86 &
+      fi
+      if [ -f tsdnsserver_linux_amd64 ]; then
+          ./tsdnsserver_linux_amd64 &
+      fi
   else
-    if [ -f tsdnsserver_linux_x86 ]; then
-      ./tsdnsserver_linux_x86 --update
-    fi
-    if [ -f tsdnsserver_linux_amd64 ]; then
-      ./tsdnsserver_linux_amd64 --update
-    fi
+      if [ -f tsdnsserver_linux_x86 ]; then
+          ./tsdnsserver_linux_x86 --update
+      fi
+      if [ -f tsdnsserver_linux_amd64 ]; then
+          ./tsdnsserver_linux_amd64 --update
+      fi
   fi
   echo "ID1"
 fi
-
 
 exit 0
