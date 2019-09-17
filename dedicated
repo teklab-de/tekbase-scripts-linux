@@ -1,10 +1,10 @@
 #! /bin/bash
 
 # TekLabs TekBase
-# Copyright 2005-2015 TekLab
+# Copyright since 2005 TekLab
 # Christian Frankenstein
-# Website: www.teklab.de
-#          www.teklab.us
+# Website: teklab.de
+#          teklab.net
 
 VAR_A=$1
 VAR_B=$2
@@ -35,21 +35,21 @@ if [ ! -d restart ]; then
 fi
 
 if [ ! -f "logs/$LOGF.txt" ]; then
-   echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
-   chmod 0666 $LOGP/logs/$LOGF.txt
+    echo "***TekBASE Script Log***" >> $LOGP/logs/$LOGF.txt
+    chmod 0666 $LOGP/logs/$LOGF.txt
 fi
 
 
 if [ "$VAR_A" = "info" ]; then
     memall=`free -k | grep -i mem | awk '{print $2,$3,$4,$6,$7}'`
-	memt=`echo "$memall" | awk '{print $1}'`
-	memu=`echo "$memall" | awk '{print $2}'`
-	memf=`echo "$memall" | awk '{print $3}'`
-	memb=`echo "$memall" | awk '{print $4}'`
-	memc=`echo "$memall" | awk '{print $5}'`
-	let memb=$memb+$memc
-	let memf=$memf+$memb
-	let memu=$memu-$memb		
+    memt=`echo "$memall" | awk '{print $1}'`
+    memu=`echo "$memall" | awk '{print $2}'`
+    memf=`echo "$memall" | awk '{print $3}'`
+    memb=`echo "$memall" | awk '{print $4}'`
+    memc=`echo "$memall" | awk '{print $5}'`
+    let memb=$memb+$memc
+    let memf=$memf+$memb
+    let memu=$memu-$memb		
     memall="$memt $memu $memf"    
     swapall=`free -k | grep -i swap | awk '{print $2,$3,$4}'`
     traffic=`vnstat -m | grep -i "$VAR_B" | awk '{print $9,$10}'`
@@ -106,76 +106,6 @@ fi
 
 if [ "$VAR_A" = "shutdown" ]; then
     check=`shutdown -h now`
-fi
-
-if [ "$VAR_A" = "miner" ]; then
-    if  [ "$VAR_B" = "status" ]; then
-        check=`ps aux | grep -v grep | grep -i nbcminer`
-        if [ -n "$check" ]; then
-    	echo "ID1"
-        else
-    	echo "ID2"
-        fi    
-    fi
-    if  [ "$VAR_B" = "start" ]; then    
-        cd /home/user-webi
-        if [ ! -d miner ]; then
-            mkdir miner
-        fi
-        cd miner
-        if [ ! -f nbcminer ]; then
-            oscheck=`cat /etc/issue | grep -i 'Debian'`
-            if [ -n "$oscheck" ]; then
-                version=`cat /etc/debian_version | awk -F. '{print $1}'`
-                os='debian'
-            fi
-            oscheck=`cat /etc/issue | grep -i 'Ubuntu'`
-            if [ -n "$oscheck" ]; then
-                version='14'
-                os='ubuntu'
-            fi
-            wget http://teklab.de/downloads/nbc_${os}_${version}_64.tar
-            tar -xzf nbc_${os}_${version}_64.tar
-            rm nbc_${os}_${version}_64.tar
-        fi
-       	runchk=`pkill -f Nabucoin`
-        if [ -f nbcminer.pid ]; then
-	        check=`ps -p \`cat nbcminer.pid\` | grep -i "nbcminer"`
-	        if [ -n "$check" ]; then
-                rm nbcminer.pid
-	        fi
-	    fi
-	    if [ ! -n "$check" ]; then
-            ./nbcminer -u $VAR_C -p 123456 -c Nabucoin &> nbcminer.log &
-            echo $! > nbcminer.pid
-            echo "`date` - NBC Miner was started" >> $LOGP/logs/$LOGF.txt
-	        echo "ID1"
-        else
-        	echo "`date` - NBC Miner cant be stopped and restarted" >> $LOGP/logs/$LOGF.txt
-	        echo "ID2"
-        fi
-    fi
-    if  [ "$VAR_B" = "stop" ]; then    
-        cd /home/user-webi
-        if [ ! -d miner ]; then
-            mkdir miner
-        fi
-        cd miner
-       	runchk=`pkill -f Nabucoin` 
-        if [ -f nbcminer.pid ]; then
-	        check=`ps -p \`cat nbcminer.pid\` | grep -i "nbcminer"`
-	        if [ ! -n "$check" ]; then
-	            rm nbcminer.pid
-	        fi
-	    fi
-	    if [ ! -n "$check" ]; then
-            echo "`date` - NBC Miner was stopped" >> $LOGP/logs/$LOGF.txt
-	        echo "ID1"
-        else
-        	echo "`date` - NBC Miner cant be stopped" >> $LOGP/logs/$LOGF.txt
-	        echo "ID2"
-        fi
-    fi
 fi
 
 exit 0
