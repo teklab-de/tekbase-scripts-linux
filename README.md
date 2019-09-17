@@ -3,7 +3,6 @@
 
 TekBASE server management scripts for Debian, Ubuntu, OpenSuSE, Centos and Fedora. The scripts are needed for the administration of the game servers, stream servers and voice servers. TekBASE is a server management software for clans, communities and service providers with an online shop, billing system, and reminder system. More information at [TekLab.de](https://teklab.de)
 
-
 ## Installation
 
 ```
