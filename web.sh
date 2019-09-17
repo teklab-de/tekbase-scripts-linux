@@ -7,7 +7,6 @@
 #          teklab.net
 
 VAR_A=$1
-VAR_B=$2
 VAR_C=$3
 VAR_D=$4
 VAR_E=$5
@@ -61,7 +60,7 @@ if [ "$VAR_A" = "dbdelete" ]; then
         Q3="FLUSH PRIVILEGES;"
         SQL="${Q1}${Q2}"
 
-        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"
         echo "ID1"
     else
         echo "ID2"			
@@ -77,8 +76,8 @@ if [ "$VAR_A" = "dbrename" ]; then
         Q1="CREATE DATABASE IF NOT EXISTS $VAR_D;"
         SQL="${Q1}"
 		
-        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
-        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd $VAR_D < $VAR_C.sql)		
+        mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"
+        mysql --user=$mysqlusr --password=$mysqlpwd $VAR_D < $VAR_C.sql		
 				
         Q1="GRANT ALL PRIVILEGES ON $VAR_D.* TO '$VAR_E'@'%';"
         Q2="REVOKE ALL PRIVILEGES ON $VAR_C.* FROM '$VAR_E'@'%';"
@@ -86,7 +85,7 @@ if [ "$VAR_A" = "dbrename" ]; then
         Q4="FLUSH PRIVILEGES;"
         SQL="${Q1}${Q2}${Q3}${Q4}"
 
-        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"
         rm $VAR_C.sql
         echo "ID1"
     else
@@ -103,7 +102,7 @@ if [ "$VAR_A" = "dbpasswd" ]; then
         Q2="FLUSH PRIVILEGES;"
         SQL="${Q1}${Q2}"
 
-        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"
         echo "ID1"
     else
         echo "ID2"			
