@@ -13,12 +13,10 @@ VAR_D=$4
 VAR_E=$5
 
 if [ "$VAR_A" = "" ]; then
-    LOGY=$(date +"%Y")
-    clear
+    ./tekbase
 fi
 
 LOGF=$(date +"%m_%Y")
-LOGC=$(date +"%m_%Y-%H_%M_%S")
 LOGP=$(pwd)
 
 mysqlpwd=$(cat hlstats.ini | grep -i password | awk '{print $2}')
@@ -74,7 +72,7 @@ case "$VAR_A" in
         mv backup.php config.php
         cd ..
         cp -r web $wwwpath/$VAR_B
-        useradd -g users -p `perl -e 'print crypt("'$VAR_C'","Sa")'` -s /bin/bash -m $VAR_B -d /var/www/$VAR_B
+        useradd -g users -p $(perl -e 'print crypt("'$VAR_C'","Sa")') -s /bin/bash -m $VAR_B -d /var/www/$VAR_B
         chown -R $VAR_B:users /var/www/$VAR_B
         cd /home/$VAR_B/scripts
         ./run_hlstats start 1 $VAR_D &
@@ -96,7 +94,7 @@ case "$VAR_A" in
     ;;
     # FTP Passwort
     4)
-        usermod -p `perl -e 'print crypt("'$VAR_C'","Sa")'` $VAR_B
+        usermod -p $(perl -e 'print crypt("'$VAR_C'","Sa")') $VAR_B
         echo "ID1"
     ;;
     # Admin Passwort
