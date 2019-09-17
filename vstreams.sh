@@ -13,9 +13,6 @@ VAR_D=$4
 VAR_E=$5
 VAR_F=$6
 VAR_G=$7
-VAR_H=$8
-VAR_I=$9
-VAR_J=${10}
 
 if [ "$VAR_A" = "" ]; then
     ./tekbase
@@ -25,7 +22,6 @@ LOGDAY=$(date +"%Y-%m-%d")
 LOGMONTH=$(date +"%Y-%m")
 
 LOGF=$(date +"%Y_%m")
-LOGC=$(date +"%Y_%m-%H_%M_%S")
 LOGP=$(pwd)
 
 if [ ! -d logs ]; then
@@ -49,7 +45,6 @@ fi
 #VAR_E APP
 #VAR_F STARTSCRIPT
 #VAR_G PORT
-#VAR_H -
 
 if [ "$VAR_A" = "start" ]; then
     if [ -f $LOGP/restart/$VAR_B-vstreams-$VAR_C ]; then
@@ -58,16 +53,16 @@ if [ "$VAR_A" = "start" ]; then
     echo "#! /bin/bash" >> $LOGP/restart/$VAR_B-vstreams-$VAR_C
     echo "check=\`ps aux | grep -v grep | grep -i screen | grep -i \"vstreams$VAR_C-X\"\`" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "if [ ! -n \"\$check\" ]; then" >> $LOGP/restart/$VAR_B-vstreams-$VAR_C
-    echo "cd $LOGP;sudo -u $VAR_B ./vstreams 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H' '$VAR_I' '$VAR_J'" >> $LOGP/restart/$VAR_B-vstreams-$VAR_C
+    echo "cd $LOGP;sudo -u $VAR_B ./vstreams 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G'" >> $LOGP/restart/$VAR_B-vstreams-$VAR_C
     echo "fi" >> $LOGP/restart/$VAR_B-vstreams-$VAR_C
     echo "exit 0" >> $LOGP/restart/$VAR_B-vstreams-$VAR_C
     chmod 0755 $LOGP/restart/$VAR_B-vstreams-$VAR_C
 
     cd /home/$VAR_B/vstreams/$VAR_D
 
-    runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B-X" | awk '{print $2}'`)
+    kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B-X" | awk '{print $2}')
     check=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B-X")
-    wipe=$(screen -wipe)
+    screen -wipe
     if [ ! -n "$check" ]; then
 	let httpp=$VAR_G+40
 	let httpsp=$VAR_G+30
@@ -90,14 +85,14 @@ if [ "$VAR_A" = "start" ]; then
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X")
 
 	if [ -n "$check" ]; then
-	    echo "`date` - Stream /home/$VAR_B/vstreams/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Stream /home/$VAR_B/vstreams/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
 	    echo "ID1"
 	else
-	    echo "`date` - Stream /home/$VAR_B/vstreams/$VAR_D cant be started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Stream /home/$VAR_B/vstreams/$VAR_D cant be started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
 	    echo "ID2"
 	fi
     else
-	echo "`date` - Stream /home/$VAR_B/vstreams/$VAR_D cant be stopped and restarted ($VAR_F)" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - Stream /home/$VAR_B/vstreams/$VAR_D cant be stopped and restarted ($VAR_F)" >> $LOGP/logs/$LOGF.txt
 	echo "ID3"
     fi
 fi
@@ -107,15 +102,15 @@ if [ "$VAR_A" = "stop" ]; then
 	rm $LOGP/restart/$VAR_B-vstreams-$VAR_C
     fi
 
-    runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X" | awk '{print $2}'`)
+    kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X" | awk '{print $2}')
     check=$(ps aux | grep -v grep | grep -i screen | grep -i "vstreams$VAR_C-X")
-    wipe=$(screen -wipe)
+    screen -wipe
 
     if [ ! -n "$check" ]; then
-	echo "`date` - Stream /home/$VAR_B/vstreams/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - Stream /home/$VAR_B/vstreams/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
 	echo "ID1"
     else
-	echo "`date` - Stream /home/$VAR_B/vstreams/$VAR_D cant be stopped" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - Stream /home/$VAR_B/vstreams/$VAR_D cant be stopped" >> $LOGP/logs/$LOGF.txt
 	echo "ID2"
     fi
 fi
@@ -123,7 +118,7 @@ fi
 
 if [ "$VAR_A" = "content" ]; then
     cd /home/$VAR_B/vstreams/$VAR_D
-    check=`cat $VAR_E`
+    check=$(cat $VAR_E)
     for LINE in $check
     do
     	echo "$LINE%TEND%"
