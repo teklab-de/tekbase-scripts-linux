@@ -39,7 +39,6 @@ if [ ! -f "logs/$LOGF.txt" ]; then
 fi
 
 if [ -f settings.ini ]; then
-    vztyp=$(grep -i vztyp settings.ini | awk '{print $2}')
     vzconf=$(grep -i vzconf settings.ini | awk '{print $2}')
     if [ ! -n "$vzconf" ]; then
     	vzconf="vz/conf"
@@ -339,7 +338,6 @@ if [ "$VAR_A" = "backuprun" ]; then
     fi
     mkdir -p /usr/vz
     mkdir -p /usr/vz/$VAR_B
-    dump=$(date +"%d_%h_%Y-%H_%M_%S")
     vzdump --compress gzip --maxfiles $VAR_C --bwlimit 30720 --dumpdir /usr/vz/$VAR_B $VAR_B
     cd /usr/vz/$VAR_B
     checkfile=$(find vzdump*)
@@ -516,7 +514,7 @@ if [ "$VAR_A" = "settings" ]; then
 fi
 
 if [ "$VAR_A" = "rootpw" ]; then
-    check=`vzctl status $VAR_B | grep -i running`
+    check=$(vzctl status $VAR_B | grep -i running)
     if [ ! -n "$check" ]; then
 	vzctl start $VAR_B
     fi
