@@ -198,16 +198,16 @@ case "$VAR_A" in
         if [ ! -d $VAR_C ]; then
 	    echo "$(date) - Folder /home/$VAR_B/$VAR_F/$VAR_C cant be created" >> $LOGP/logs/$LOGF.txt
         else
-#	if [ "$VAR_F" = "server" ]; then
-#	    passwd=`pwgen 10 1`
-#	    useradd -g users -p `perl -e 'print crypt("'$passwd'","Sa")'` -s /bin/bash $VAR_B-$VAR_C -d /home/$VAR_B/server/$VAR_C
-#	    echo "$(date) - Gameserver user $VAR_B-$VAR_C was created" >> $LOGP/logs/$LOGF.txt
-#	fi
-	echo "$(date) - Folder /home/$VAR_B/$VAR_F/$VAR_C was created" >> $LOGP/logs/$LOGF.txt
-#	if [ "$VAR_G" = "protect" ]; then
-#	    chown -R $VAR_H $VAR_C
-#	    chmod 755 $VAR_C
-#	fi
+#	    if [ "$VAR_F" = "server" ]; then
+#	        passwd=`pwgen 10 1`
+#	        useradd -g users -p `perl -e 'print crypt("'$passwd'","Sa")'` -s /bin/bash $VAR_B-$VAR_C -d /home/$VAR_B/server/$VAR_C
+#	        echo "$(date) - Gameserver user $VAR_B-$VAR_C was created" >> $LOGP/logs/$LOGF.txt
+#	    fi
+	    echo "$(date) - Folder /home/$VAR_B/$VAR_F/$VAR_C was created" >> $LOGP/logs/$LOGF.txt
+#	    if [ "$VAR_G" = "protect" ]; then
+#	        chown -R $VAR_H $VAR_C
+#	        chmod 755 $VAR_C
+#	    fi
         fi
 
         if [ -f $VAR_G ] && [ "$VAR_G" != "" ]; then
@@ -389,7 +389,7 @@ EOF
     # Versionsausgabe und Screenlog
     18)
         if [ ! -n "$VAR_B" ]; then
-	    echo "8700"
+	    echo "8701"
         fi
 
         if [ "$VAR_B" = "scservlog" ]; then
@@ -435,18 +435,18 @@ EOF
         fi
 
         if [ "$VAR_B" = "cpumem" ]; then
-	    check=`ps x | grep -i "server${VAR_C}-X" | grep -v grep | sed -e 's#.*server'${VAR_C}'-X \.\(\)#\1#' | grep -v "sed -e"`
+	    check=$(ps x | grep -i "server${VAR_C}-X" | grep -v grep | sed -e 's#.*server'${VAR_C}'-X \.\(\)#\1#' | grep -v "sed -e")
 	    if [ -n "$check" ]; then
-	        pidone=`ps x | grep -i "$check" | grep -vi screen | grep -v grep | awk '{print $1}'`
+	        pidone=$(ps x | grep -i "$check" | grep -vi screen | grep -v grep | awk '{print $1}')
 	        if [ -n "$pidone" ]; then
 		    let pidend=pidone+51
 		    while [ $pidone -lt $pidend ]; do
-		        chkpid=`ps x | grep -i "${pidone} " | grep -v grep`
+		        chkpid=$(ps x | grep -i "${pidone} " | grep -v grep)
 		        if [ -n "$chkpid" ]; then
-			    chkmem=`ps -p $pidone -o pmem --no-headers | awk '{print $1}'`
+			    chkmem=$(ps -p $pidone -o pmem --no-headers | awk '{print $1}')
 			    if [ "$chkmem" != "0.0" ] && [ "$chkmem" != "0.1" ] && [ "$chkmem" != "0.2" ]; then
-			        chkcpu=`ps -p $pidone -o pcpu --no-headers | awk '{print $1}'`
-			        chkfree=`free -k | grep -i "mem" | awk '{print $2}'`
+			        chkcpu=$(ps -p $pidone -o pcpu --no-headers | awk '{print $1}')
+			        chkfree=$(free -k | grep -i "mem" | awk '{print $2}')
 			        echo "$chkcpu;$chkmem;$chkfree"
 			        pidend=52
 			    fi
@@ -459,8 +459,8 @@ EOF
     ;;
     # Autoupdater
     19)
-        runscr=`screen -A -m -d -S tekautoup ./autoupdater`
-        check=`ps aux | grep -v grep | grep -i screen | grep -i tekautoup`
+        screen -A -m -d -S tekautoup ./autoupdater
+        check=$(ps aux | grep -v grep | grep -i screen | grep -i tekautoup)
         if [ ! -n "$check" ]; then
 	    echo "ID2"
         else
@@ -470,7 +470,7 @@ EOF
     # VServer Ausfuehrung
     24)
         if [ "$VAR_C" = "delete" ]; then
-	    check=`vzctl status $VAR_B | grep -i running`
+	    check=$(vzctl status $VAR_B | grep -i running)
 	    if [ -n "$check" ]; then
 	        vzctl stop $VAR_B
 	    fi
@@ -489,9 +489,9 @@ EOF
         fi
 
         if [ "$VAR_C" = "traffic" ]; then
-	    for i in `./tekbase 24 99 iplist`
+	    for i in $(./tekbase 24 99 iplist)
 	    do
-	        traffic=`iptables -nvx -L FORWARD | grep " $i " | tr -s [:blank:] |cut -d' ' -f3| awk '{sum+=$1} END {print sum;}'`
+	        traffic=$(iptables -nvx -L FORWARD | grep " $i " | tr -s [:blank:] |cut -d' ' -f3| awk '{sum+=$1} END {print sum;}')
 	        if [ -n "$VAR_E" ]; then
 		    wget --post-data 'op=vtraffic&key='$VAR_B'&rid='$VAR_E'&vip='$i'&traffic='$traffic'' -O - $VAR_D/automated.php
 	        else
@@ -499,8 +499,8 @@ EOF
 	        fi
 	    done
 	    iptables -Z
-	    for i in `./tekbase 24 99 iplist`; do iptables -D FORWARD -s $i; iptables -D FORWARD -d $i; done >/dev/null 2>&1
-	    for i in `./tekbase 24 99 iplist`; do iptables -A FORWARD -s $i; iptables -A FORWARD -d $i; done >/dev/null 2>&1
+	    for i in $(./tekbase 24 99 iplist); do iptables -D FORWARD -s $i; iptables -D FORWARD -d $i; done >/dev/null 2>&1
+	    for i in $(./tekbase 24 99 iplist); do iptables -A FORWARD -s $i; iptables -A FORWARD -d $i; done >/dev/null 2>&1
         fi
 
         if [ "$VAR_C" = "iplist" ]; then
@@ -510,9 +510,8 @@ EOF
     # Change files
     28)
         if [ "$VAR_F" = "startscr" ]; then
-            filelist=`echo "$VAR_E" | sed -e 's/;/\n/g'`
             cd /home/$VAR_B/$VAR_C/$VAR_D
-            for LINE in $filelist
+            for LINE in $(echo "$VAR_E" | sed -e 's/;/\n/g')
             do
 	        chmod 777 $LINE
 	        if [ -d $LINE ]; then
@@ -523,18 +522,17 @@ EOF
             done
         else
 	    newvar="startscr"
-	    runscr=`screen -A -m -d -S $VAR_B$VAR_D-28 ./tekbase 28 $VAR_B $VAR_C $VAR_D $VAR_E $newvar`
+	    screen -A -m -d -S $VAR_B$VAR_D-28 ./tekbase 28 $VAR_B $VAR_C $VAR_D $VAR_E $newvar
         fi
     ;;
     # Copy files
     29)
         if [ "$VAR_F" = "startscr" ]; then
-            filelist=`echo "$VAR_E" | sed -e 's/;/\n/g'`
             cd $LOGP/cache
             mkdir -p $VAR_B$VAR_D
             chmod 0777 $VAR_B$VAR_D
             cd /home/$VAR_B/$VAR_C/$VAR_D
-            for LINE in $filelist
+            for LINE in $(echo "$VAR_E" | sed -e 's/;/\n/g')
             do
                 if [ -d $LINE ]; then
                     cp -r --parents $LINE $LOGP/cache/$VAR_B$VAR_D
@@ -553,13 +551,13 @@ EOF
             cp protect.md5 /home/$VAR_B/$VAR_C/$VAR_D/protect.md5
         else
             newvar="startscr"
-            runscr=`screen -A -m -d -S $VAR_B$VAR_D-29 ./tekbase 29 $VAR_B $VAR_C $VAR_D $VAR_E $newvar`
+            screen -A -m -d -S $VAR_B$VAR_D-29 ./tekbase 29 $VAR_B $VAR_C $VAR_D $VAR_E $newvar
         fi
     ;;
     # Check MD5
     30)
-        dowmd5=`cat $LOGP/cache/$VAR_B$VAR_D/protect.md5 | awk '{print $1}'`
-        chkmd5=`cat /home/$VAR_B/$VAR_C/$VAR_D/protect.md5 | awk '{print $1}'`
+        dowmd5=$(cat $LOGP/cache/$VAR_B$VAR_D/protect.md5 | awk '{print $1}')
+        chkmd5=$(cat /home/$VAR_B/$VAR_C/$VAR_D/protect.md5 | awk '{print $1}')
         if [ "$dowmd5" = "$chkmd5" ]; then
             echo "ID1"
         else
@@ -580,18 +578,17 @@ EOF
 	    cd /home/$VAR_B/$VAR_F
         fi
 
-        foldersize=`du -s | awk '{print $1}'`
-        echo "$foldersize"
+        echo "$(du -s | awk '{print $1}')"
     ;;
     32)
-        echo "`ps aux --sort pid | grep -v "ps aux" | grep -v "awk {printf" | grep -v "tekbase" | grep -v "perl -e use MIME::Base64" | awk '{printf($1"%TD%")
+        echo "$(ps aux --sort pid | grep -v "ps aux" | grep -v "awk {printf" | grep -v "tekbase" | grep -v "perl -e use MIME::Base64" | awk '{printf($1"%TD%")
         printf($2"%TD%")
         printf($3"%TD%")
         printf($4"%TD%")
         for (i=11;i<=NF;i++) {
 	    printf("%s ", $i);
         }
-        print("%TEND%") }'`"
+        print("%TEND%") }')"
     ;;
     33)
         killall -w -q -u $VAR_B
@@ -636,4 +633,6 @@ EOF
 	done
     ;;
 esac
+
+
 exit 0
