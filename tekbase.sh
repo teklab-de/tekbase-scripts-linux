@@ -19,7 +19,7 @@ VAR_I=$9
 VAR_J=${10}
 
 if [ "$VAR_A" = "" ]; then
-    LOGY=`date +"%Y"`
+    LOGY=$(date +"%Y")
     clear
     echo "###########################################"
     echo "# TekLabs TekBase                         #"
@@ -30,9 +30,9 @@ if [ "$VAR_A" = "" ]; then
     echo "###########################################"
 fi
 
-LOGF=`date +"%m_%Y"`
-LOGC=`date +"%m_%Y-%H_%M_%S"`
-LOGP=`pwd`
+LOGF=$(date +"%Y_%m")
+LOGC=$(date +"%Y_%m-%H_%M_%S")
+LOGP=$(pwd)
 
 if [ ! -d logs ]; then
     mkdir logs
@@ -56,44 +56,44 @@ case "$VAR_A" in
     # User anlegen
     1)
         if [ ! -d /home/$VAR_B ] ; then 
-	    useradd -g users -p `perl -e 'print crypt("'$VAR_C'","Sa")'` -s /bin/bash -m $VAR_B -d /home/$VAR_B
+	    useradd -g users -p $(perl -e 'print crypt("'$VAR_C'","Sa")') -s /bin/bash -m $VAR_B -d /home/$VAR_B
 	    if [ ! -d /home/$VAR_B ]; then
-	        echo "`date` - Error: User $VAR_B cant be created" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - Error: User $VAR_B cant be created" >> $LOGP/logs/$LOGF.txt
 	        echo "ID2"
 	    else
-	        echo "`date` - User $VAR_B was created" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - User $VAR_B was created" >> $LOGP/logs/$LOGF.txt
 	        echo "ID1"
 	    fi
         else
-	    usermod -p `perl -e 'print crypt("'$VAR_C'","Sa")'` $VAR_B
-	    echo "`date` - User $VAR_B was existing and changed" >> $LOGP/logs/$LOGF.txt
+	    usermod -p $(perl -e 'print crypt("'$VAR_C'","Sa")') $VAR_B
+	    echo "$(date) - User $VAR_B was existing and changed" >> $LOGP/logs/$LOGF.txt
 	    echo "ID1"
         fi
     ;;
     # User bearbeiten
     2)
-        usermod -p `perl -e 'print crypt("'$VAR_C'","Sa")'` $VAR_B
-        echo "`date` - User $VAR_B was changed" >> $LOGP/logs/$LOGF.txt
+        usermod -p $(perl -e 'print crypt("'$VAR_C'","Sa")') $VAR_B
+        echo "$(date) - User $VAR_B was changed" >> $LOGP/logs/$LOGF.txt
         echo "ID1"
     ;;
     # User entfernen 1-2
     3)
         rm $LOGP/restart/$VAR_B*
-        startchk=`ps aux | grep -v grep | grep -i screen | grep -i "d$VAR_B-X"`
+        startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "d$VAR_B-X")
         if [ ! -n "$startchk" ]; then
-	    runscr=`screen -A -m -d -S d$VAR_B-X ./tekbase 4 $VAR_B $VAR_C`
-	    check=`ps aux | grep -v grep | grep -i screen | grep -i "d$VAR_B-X"`
+	    screen -A -m -d -S d$VAR_B-X ./tekbase 4 $VAR_B $VAR_C
+	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "d$VAR_B-X")
         fi
         if [ ! -n "$check" ]; then
 	    if [ ! -d /home/$VAR_B ]; then
-	        echo "`date` - User $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - User $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
 	        echo "ID1"
 	    else
-	        echo "`date` - Error: User $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - Error: User $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
 	        echo "ID2"
 	    fi
         else
-	    echo "`date` - User $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - User $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
 	    echo "ID1"
         fi
     ;;
@@ -107,7 +107,7 @@ case "$VAR_A" in
 	        cd /home/$VAR_B
 	        if [ -d apps ]; then
 		    cd apps
-		    acounter=`find -type d | wc -l`
+		    acounter=$(find -type d | wc -l)
 		    if [ "$acounter" != "1" ]; then
 		        totalcount=1
 		    fi
@@ -115,7 +115,7 @@ case "$VAR_A" in
 	        fi
 	        if [ -d server ]; then
 		    cd server
-		    scounter=`find -type d | wc -l`
+		    scounter=$(find -type d | wc -l)
 	            if [ "$scounter" != "1" ]; then
 		        totalcount=1
 		    fi
@@ -123,7 +123,7 @@ case "$VAR_A" in
 	        fi
 	        if [ -d streams ]; then
 		    cd streams
-		    sscounter=`find -type d | wc -l`
+		    sscounter=$(find -type d | wc -l)
 		    if [ "$sscounter" != "1" ]; then
 		        totalcount=1
 		    fi
@@ -131,7 +131,7 @@ case "$VAR_A" in
 	        fi
 	        if [ -d voice ]; then
 		    cd voice
-		    vcounter=`find -type d | wc -l`
+		    vcounter=$(find -type d | wc -l)
 		    if [ "$vcounter" != "1" ]; then
 		        totalcount=1
 		    fi
@@ -139,7 +139,7 @@ case "$VAR_A" in
 	        fi
 	        if [ -d vstreams ]; then
 		    cd vstreams
-		    vscounter=`find -type d | wc -l`
+		    vscounter=$(find -type d | wc -l)
 		    if [ "$vscounter" != "1" ]; then
 		        totalcount=1
 		    fi
@@ -167,10 +167,10 @@ case "$VAR_A" in
     ;;
     # Games/Apps/Voice/Stream installieren 1-2
     5)
-        startchk=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_C-X"`
+        startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_C-X")
         if [ ! -n "$startchk" ]; then
 	    screen -A -m -d -S i$VAR_B$VAR_C-X ./tekbase 6 $VAR_B $VAR_C $VAR_D $VAR_E $VAR_F $VAR_G $VAR_H
-	    check=`ps aux | grep -v grep | grep -i screen | grep -i "i$VAR_B$VAR_C-X"`
+	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "i$VAR_B$VAR_C-X")
         fi
         if [ ! -n "$check" ]; then
 	    if [ ! -d /home/$VAR_B/$VAR_F/$VAR_C ]; then
@@ -196,14 +196,14 @@ case "$VAR_A" in
         fi
         su $VAR_B -c "mkdir $VAR_C"
         if [ ! -d $VAR_C ]; then
-	    echo "`date` - Folder /home/$VAR_B/$VAR_F/$VAR_C cant be created" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Folder /home/$VAR_B/$VAR_F/$VAR_C cant be created" >> $LOGP/logs/$LOGF.txt
         else
 #	if [ "$VAR_F" = "server" ]; then
 #	    passwd=`pwgen 10 1`
 #	    useradd -g users -p `perl -e 'print crypt("'$passwd'","Sa")'` -s /bin/bash $VAR_B-$VAR_C -d /home/$VAR_B/server/$VAR_C
-#	    echo "`date` - Gameserver user $VAR_B-$VAR_C was created" >> $LOGP/logs/$LOGF.txt
+#	    echo "$(date) - Gameserver user $VAR_B-$VAR_C was created" >> $LOGP/logs/$LOGF.txt
 #	fi
-	echo "`date` - Folder /home/$VAR_B/$VAR_F/$VAR_C was created" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - Folder /home/$VAR_B/$VAR_F/$VAR_C was created" >> $LOGP/logs/$LOGF.txt
 #	if [ "$VAR_G" = "protect" ]; then
 #	    chown -R $VAR_H $VAR_C
 #	    chmod 755 $VAR_C
@@ -217,11 +217,11 @@ case "$VAR_A" in
 	    chmod 755 install.sh
 	    su $VAR_B -c "./install.sh"
 	    rm install.sh
-	    counter=`find -type f | wc -l`
+	    counter=$(find -type f | wc -l)
 	    if [ "$counter" != "0" ]; then
-	        echo "`date` - Script in $VAR_B/$VAR_F/$VAR_C was installed" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - Script in $VAR_B/$VAR_F/$VAR_C was installed" >> $LOGP/logs/$LOGF.txt
 	    else
-	        echo "`date` - Script in $VAR_B/$VAR_F/$VAR_C cant be installed" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - Script in $VAR_B/$VAR_F/$VAR_C cant be installed" >> $LOGP/logs/$LOGF.txt
 	    fi
 	    exit 0
         fi
@@ -242,17 +242,17 @@ case "$VAR_A" in
 	    fi
 	    wget -O $VAR_B$VAR_C.md5 $VAR_E/$VAR_D.tar.md5
 	    if [ -f $VAR_B$VAR_C.md5 ]; then
-	        dowmd5=`cat $VAR_B$VAR_C.md5 | awk '{print $1}'`
+	        dowmd5=$(cat $VAR_B$VAR_C.md5 | awk '{print $1}')
 	        rm $VAR_B$VAR_C.md5
 	    else
 	        dowmd5="ID2"
 	    fi
-	    chkmd5=`md5sum $VAR_D.tar | awk '{print $1}'`
+	    chkmd5=$(md5sum $VAR_D.tar | awk '{print $1}')
 	    if [ "$dowmd5" != "$chkmd5" ]; then
 	        mkdir $LOGC
 	        cd $LOGC
 	        wget $VAR_E/$VAR_D.tar
-	        dowmd5=`md5sum $VAR_D.tar | awk '{print $1}'`
+	        dowmd5=$(md5sum $VAR_D.tar | awk '{print $1}')
 	        if [ "$dowmd5" != "$chkmd5" ]; then
 	            mv $VAR_D.tar $LOGP/cache/$VAR_D.tar
 	        fi
@@ -261,14 +261,14 @@ case "$VAR_A" in
 	    fi
         fi
         if [ ! -f $VAR_D.tar ]; then
-	    echo "`date` - Image $VAR_D.tar cant be downloaded" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Image $VAR_D.tar cant be downloaded" >> $LOGP/logs/$LOGF.txt
         else
-	    echo "`date` - Image $VAR_D.tar was downloaded" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Image $VAR_D.tar was downloaded" >> $LOGP/logs/$LOGF.txt
 	    if [ "$VAR_G" = "protect" ]; then
-	        userchk=`grep ^$VAR_B-p: /etc/passwd | grep -i "sec"`
+	        userchk=$(grep ^$VAR_B-p: /etc/passwd | grep -i "sec")
 	        if [ "$userchk" = "" ]; then
-		    passwd=`pwgen 8 1 -c -n`
-		    useradd -g users -p `perl -e 'print crypt("'$passwd'","Sa")'` -s /bin/bash $VAR_B-p -d /home/$VAR_B/$VAR_F/$VAR_C
+		    passwd=$(pwgen 8 1 -c -n)
+		    useradd -g users -p $(perl -e 'print crypt("'$passwd'","Sa")') -s /bin/bash $VAR_B-p -d /home/$VAR_B/$VAR_F/$VAR_C
 	        fi
 	        cd /home/$VAR_B/$VAR_F
 	        chown $VAR_B-p:users $VAR_C
@@ -286,9 +286,8 @@ case "$VAR_A" in
 	        rm install.sh
 	    fi
 	    if [ "$VAR_F" = "server" ]; then
-	        filelist=`cat $LOGP/includes/$VAR_D/protect.inf`
 	        cd /home/$VAR_B/$VAR_F/$VAR_C
-	        for PROTLINE in $filelist
+	        for PROTLINE in $(cat $LOGP/includes/$VAR_D/protect.inf)
 	        do
 		    if [ -f $PROTLINE ]; then
 		        chown $VAR_B-p:users $PROTLINE
@@ -296,11 +295,11 @@ case "$VAR_A" in
 		   fi
 	        done
 	    fi
-	    counter=`find -type f | wc -l`
+	    counter=$(find -type f | wc -l)
 	    if [ "$counter" != "0" ]; then
-	        echo "`date` - Image $VAR_D.tar was installed" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - Image $VAR_D.tar was installed" >> $LOGP/logs/$LOGF.txt
 	    else
-	        echo "`date` - Image $VAR_D.tar cant be installed" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - Image $VAR_D.tar cant be installed" >> $LOGP/logs/$LOGF.txt
 	    fi
         fi
         sleep 2
@@ -310,10 +309,10 @@ case "$VAR_A" in
         if [ -f $LOGP/restart/$VAR_B-$VAR_D-$VAR_C ]; then
 	    rm $LOGP/restart/$VAR_B-$VAR_D-$VAR_C
         fi
-        startchk=`ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_C-X"`
+        startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_C-X")
         if [ ! -n "$startchk" ]; then
 	    screen -A -m -d -S d$VAR_B$VAR_C-X ./tekbase 8 $VAR_B $VAR_C $VAR_D
-	    check=`ps aux | grep -v grep | grep -i screen | grep -i "d$VAR_B$VAR_C-X"`
+	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "d$VAR_B$VAR_C-X")
         fi
         if [ ! -n "$check" ]; then
 	    cd /home/$VAR_B/$VAR_D
@@ -332,7 +331,7 @@ case "$VAR_A" in
         cd /home/$VAR_B/$VAR_D
         rm -r $VAR_C
 
-        userchk=`grep ^$VAR_B-p: /etc/passwd | grep -i "sec"`
+        userchk=$(grep ^$VAR_B-p: /etc/passwd | grep -i "sec")
         if [ "$userchk" != "" ]; then
 	    killall -u $VAR_B-p
 	    sleep 10
@@ -351,15 +350,15 @@ case "$VAR_A" in
 	    rm -r $VAR_B$VAR_C
         fi
         if [ ! -d $VAR_C ]; then
-	    echo "`date` - Folder /home/$VAR_B/$VAR_D/$VAR_C was deleted" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Folder /home/$VAR_B/$VAR_D/$VAR_C was deleted" >> $LOGP/logs/$LOGF.txt
         else
-	    echo "`date` - Folder /home/$VAR_B/$VAR_D/$VAR_C cant be deleted" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Folder /home/$VAR_B/$VAR_D/$VAR_C cant be deleted" >> $LOGP/logs/$LOGF.txt
         fi
     ;;
     # FTP User anlegen
     9)
-        uid=`cat /etc/passwd | grep home/$VAR_B | cut -d : -f3`
-	gid=`cat /etc/passwd | grep home/$VAR_B | cut -d : -f4`
+        uid=$(grep home/$VAR_B /etc/passwd | cut -d : -f3)
+	gid=$(grep home/$VAR_B /etc/passwd | cut -d : -f4)
 	/usr/bin/expect<<EOF
         cd /etc/proftpd
 	spawn ftpasswd --passwd --name=$VAR_C --uid=$uid --gid=$gid --home=$VAR_E --shell=/bin/false
@@ -395,7 +394,7 @@ EOF
 
         if [ "$VAR_B" = "scservlog" ]; then
 	    cd /home
-	    for FILE in `find . -iname sc_serv.log -type f`
+	    for FILE in $(find . -iname sc_serv.log -type f)
 	    do
 	        rm $FILE
 	    done
@@ -403,7 +402,7 @@ EOF
     
         if [ "$VAR_B" = "sctranslog" ]; then
 	    cd /home
-	    for FILE in `find . -iname sc_trans.log -type f`
+	    for FILE in $(find . -iname sc_trans.log -type f)
 	    do
 	        rm $FILE
 	    done
@@ -411,7 +410,7 @@ EOF
 
         if [ "$VAR_B" = "screenlog" ]; then
 	    cd /home
-	    for FILE in `find . -iname screenlog* -type f`
+	    for FILE in $(find . -iname screenlog* -type f)
 	    do
 	        rm $FILE
 	    done
@@ -419,16 +418,16 @@ EOF
     
         if [ "$VAR_B" = "restart" ]; then
 	    cd $LOGP/restart
-	    for FILE in `find -type f`
+	    for FILE in $(find -type f)
 	    do
 	        $FILE
 	    done
         fi
 
         if [ "$VAR_B" = "daemon" ]; then
-	    check=`ps aux | grep -v grep | grep -i tekbase_daemon`
+	    check=$(ps aux | grep -v grep | grep -i tekbase_daemon)
 	    if [ ! -n "$check" ]; then
-	        pcheck=`ps aux | grep -v grep | grep -i "per -e use MIME::Base64"`
+	        check=$(ps aux | grep -v grep | grep -i "per -e use MIME::Base64")
 	        if [ ! -n "$check" ]; then
 	            ./server &
 	        fi
@@ -477,9 +476,9 @@ EOF
 	    fi
 	    vzctl destroy $VAR_B
 	    if [ ! -f /etc/vz/conf/$VAR_B.conf ]; then
-	        echo "`date` - VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
 	    else
-	        echo "`date` - VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
+	        echo "$(date) - VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
 	    fi
 	    cd /etc/vz/conf
 	    rm $VAR_B.conf.destroyed
@@ -623,19 +622,17 @@ EOF
     ;;
     35)
 	cd /home
-	memberlist=`ls -d */ | sed 's#/##'`
-	for MEMBER in $memberlist
+	for MEMBER in $(ls -d */ | sed 's#/##')
 	do
-		if [ -d $MEMBER/$VAR_B ]; then
-			cd /home/$MEMBER/$VAR_B
-			serverlist=`ls -d */ | sed 's#/##'`
-			for SERVER in $serverlist
-			do
-				quota=`du -s | awk '{print $1}'`
-				wget --post-data 'op=softlimit&key='$VAR_C'&member='$MEMBER'&typ='$VAR_B'&path='$SERVER'&quota='$quota'' -O - $VAR_D/automated.php
-			done
-			cd /home
-		fi
+	    if [ -d $MEMBER/$VAR_B ]; then
+	        cd /home/$MEMBER/$VAR_B
+		for SERVER in $(ls -d */ | sed 's#/##')
+		do
+		    quota=$(du -s | awk '{print $1}')
+		    wget --post-data 'op=softlimit&key='$VAR_C'&member='$MEMBER'&typ='$VAR_B'&path='$SERVER'&quota='$quota'' -O - $VAR_D/automated.php
+		done
+		cd /home
+	    fi
 	done
     ;;
 esac
