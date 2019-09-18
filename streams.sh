@@ -47,7 +47,7 @@ if [ "$VAR_A" = "start" ]; then
     echo "#! /bin/bash" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
     echo "if [ -f /home/$VAR_B/streams/$VAR_D/$VAR_E.pid ]; then" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
     echo "pid=\`cat /home/$VAR_B/streams/$VAR_D/$VAR_E.pid\`" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
-    echo "check=\`ps -p \$pid | grep -i "$VAR_E"\`" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
+    echo "check=\`ps -p \$pid | grep -i \"$VAR_E\"\`" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
     echo "fi" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
     echo "if [ ! -n \"\$check\" ]; then" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
     echo "cd $LOGP;sudo -u $VAR_B ./streams 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H' '$VAR_I' '$VAR_J'" >> $LOGP/restart/$VAR_B-$VAR_E-$VAR_C
@@ -290,7 +290,7 @@ fi
 
 if [ "$VAR_A" = "streamstats" ]; then
     check=$(php -f php/stream_check.php)
-    chkbitrate=$(echo "$check" | awk '{print $1}')
+    #chkbitrate=$(echo "$check" | awk '{print $1}')
     chkslots=$(echo "$check" | awk '{print $2}')
     chktitle=$(echo "$check" | awk '{for (i=3;i<=NF;i++) {
 	printf("%s ", $i);
