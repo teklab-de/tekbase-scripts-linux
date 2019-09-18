@@ -10,10 +10,12 @@ VAR_A=$1
 VAR_C=$3
 
 checkpasswd() {
-    export VAR_C
     originalpw=$(grep -w "root" /etc/shadow | cut -d: -f2)
-    export algo=$(echo $originalpw | cut -d'$' -f2)
-    export salt=$(echo $originalpw | cut -d'$' -f3)
+    algo=$(echo $originalpw | cut -d'$' -f2)
+    salt=$(echo $originalpw | cut -d'$' -f3)
+    export VAR_C
+    export algo
+    export salt
     genpw=$(perl -le 'print crypt("$ENV{VAR_C}","\$$ENV{algo}\$$ENV{salt}\$")')
     if [ "$genpw" == "$originalpw" ]; then
 	echo "error";
@@ -25,14 +27,14 @@ checkpasswd() {
 
 if [ "$VAR_A" = "cpu" ]; then
     tekresult=""
-    cpucores=$(grep ^processor /proc/cpuinfo | wc -l)
-    for (( i=0; $i < $cpucores; i++ )); do
+    cpucores=$(grep -c ^processor /proc/cpuinfo)
+    for (( i=0; i < cpucores; i++ )); do
 	totallast[$i]=0; busylast[$i]=0
     done
 
     counter=0
     while [ $counter != 2 ]; do
-	for (( i=0; i < $cpucores; i++ )); do
+	for (( i=0; i < cpucores; i++ )); do
 	    cpudata=$(grep ^"cpu"$i /proc/stat)
 	    busyticks=$(echo $cpudata | awk -F' ' '{printf "%.0f",$2+$3+$4+$7+$8-$BL}')
 	    totalticks=$(echo $cpudata | awk -F' ' '{printf "%.0f",$2+$3+$4+$5+$6+$7+$8}')
