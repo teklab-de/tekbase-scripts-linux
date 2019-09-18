@@ -43,7 +43,7 @@ if [ "$VAR_A" = "dbcreate" ]; then
         Q3="FLUSH PRIVILEGES;"
         SQL="${Q1}${Q2}${Q3}"
 
-        sqlcreate=$(mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL")
+        mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"
         echo "ID1"
     else
         echo "ID2"
