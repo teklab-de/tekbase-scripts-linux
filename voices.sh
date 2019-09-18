@@ -22,7 +22,6 @@ if [ "$VAR_A" = "" ]; then
 fi
 
 LOGF=$(date +"%Y_%m")
-LOGC=$(date +"%Y_%m-%H_%M_%S")
 LOGP=$(pwd)
 
 if [ ! -d logs ]; then
@@ -62,60 +61,54 @@ if [ "$VAR_A" = "start" ]; then
 
     if [ "$VAR_E" = "mumble" ]; then
 	if [ -f murmurd.pid ]; then
-	    check=$(ps -p `cat murmurd.pid` | grep -i "mumble")
+	    check=$(ps -p $(grep -i "mumble" murmurd.pid))
 	    if [ -n "$check" ]; then
-		runchk=$(kill -9 `cat murmurd.pid`)
+		kill -9 $(cat murmurd.pid)
 	    fi
-	    check=$(ps -p `cat murmurd.pid` | grep -i "mumble")
+	    check=$(ps -p $(grep -i "mumble" murmurd.pid))
 	    rm murmurd.pid
 	fi
 	if [ ! -n "$check" ]; then
-	    sed -e '/port=/c\port='$VAR_F'' mumble-server.ini > backup.ini
-	    rm mumble-server.ini
-	    sed -e '/users=/c\users='$VAR_G'' backup.ini > mumble-server.ini
-	    rm backup.ini
-	    sed -e '/host=/c\host='$VAR_H'' mumble-server.ini > backup.ini
-	    rm mumble-server.ini
-	    sed -e '/bandwidth=/c\bandwidth='$VAR_I'' backup.ini > mumble-server.ini
-	    rm backup.ini
+	    sed -i '/port=/Ic\port='$VAR_F'' mumble-server.ini
+	    sed -i '/users=/Ic\users='$VAR_G'' mumble-server.ini
+	    sed -i '/host=/Ic\host='$VAR_H'' mumble-server.ini
+	    sed -i '/bandwidth=/Ic\bandwidth='$VAR_I'' mumble-server.ini
 
 	    ./mumble-server -ini mumble-server.ini
 	    sleep 2
 
 	    if [ -f murmurd.pid ]; then
-		echo "`date` - Voice /home/$VAR_B/voice/$VAR_D was started (./mumble-server -ini mumble-server.ini)" >> $LOGP/logs/$LOGF.txt
+		echo "$(date) - Voice /home/$VAR_B/voice/$VAR_D was started (./mumble-server -ini mumble-server.ini)" >> $LOGP/logs/$LOGF.txt
 		echo "ID1"
 	    else
-		echo "`date` - Voice /home/$VAR_B/voice/$VAR_D cant be started (./mumble-server -ini mumble-server.ini)" >> $LOGP/logs/$LOGF.txt
+		echo "$(date) - Voice /home/$VAR_B/voice/$VAR_D cant be started (./mumble-server -ini mumble-server.ini)" >> $LOGP/logs/$LOGF.txt
 		echo "ID2"
 	    fi
 	else
-	    echo "`date` - Voice /home/$VAR_B/voice/$VAR_D cant be stopped and restarted (./mumble-server -ini mumble-server.ini)" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Voice /home/$VAR_B/voice/$VAR_D cant be stopped and restarted (./mumble-server -ini mumble-server.ini)" >> $LOGP/logs/$LOGF.txt
 	    echo "ID3"
 	fi
     fi
     if [ "$VAR_E" = "ventrilo" ]; then
-	runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X" | awk '{print $2}'`)
+	kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X" | awk '{print $2}')
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X")
-	wipe=$(screen -wipe)
+	screen -wipe
 	if [ ! -n "$check" ]; then
-	    sed -e '/Port=/c\Port='$VAR_F'' ventrilo_srv.ini > backup.ini
-	    rm ventrilo_srv.ini
-	    sed -e '/MaxClients=/c\MaxClients='$VAR_G'' backup.ini > ventrilo_srv.ini
-	    rm backup.ini
+	    sed -i '/Port=/Ic\Port='$VAR_F'' ventrilo_srv.ini
+	    sed -i '/MaxClients=/Ic\MaxClients='$VAR_G'' ventrilo_srv.ini
 
 	    screen -A -m -d -S voice$VAR_B-X ./ventrilo_srv
-	    check=`ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X"`
+	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X")
 
 	    if [ -n "$check" ]; then
-		echo "`date` - Voice /home/$VAR_B/voice/$VAR_D was started (./ventrilo_srv)" >> $LOGP/logs/$LOGF.txt
+		echo "$(date) - Voice /home/$VAR_B/voice/$VAR_D was started (./ventrilo_srv)" >> $LOGP/logs/$LOGF.txt
 		echo "ID1"
 	    else
-		echo "`date` - Voice /home/$VAR_B/voice/$VAR_D cant be started (./ventrilo_srv)" >> $LOGP/logs/$LOGF.txt
+		echo "$(date) - Voice /home/$VAR_B/voice/$VAR_D cant be started (./ventrilo_srv)" >> $LOGP/logs/$LOGF.txt
 		echo "ID2"
 	    fi
 	else
-	    echo "`date` - Voice /home/$VAR_B/voice/$VAR_D cant be stopped and restarted (./ventrilo_srv)" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - Voice /home/$VAR_B/voice/$VAR_D cant be stopped and restarted (./ventrilo_srv)" >> $LOGP/logs/$LOGF.txt
 	    echo "ID3"
 	fi
     fi
@@ -130,27 +123,27 @@ if [ "$VAR_A" = "stop" ]; then
 
     if [ "$VAR_E" = "mumble" ]; then
 	if [ -f murmurd.pid ]; then
-	    check=$(ps -p `cat murmurd.pid` | grep -i "mumble")
+	    check=$(ps -p $(grep -i "mumble" murmurd.pid))
 	    if [ -n "$check" ]; then
-	        runchk=$(kill -9 `cat murmurd.pid`)
+	        kill -9 $(cat murmurd.pid)
 	    fi
-	    check=$(ps -p `cat murmurd.pid` | grep -i "mumble")
+	    check=$(ps -p $(grep -i "mumble" murmurd.pid))
 	    rm murmurd.pid
         fi
     fi
     if [ "$VAR_E" = "ventrilo" ]; then
 	if [ "$VAR_C" = "vstreams" ]; then
-	    runchk=$(kill -9 `ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X" | awk '{print $2}'`)
+	    kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X" | awk '{print $2}')
 	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "voice$VAR_C-X")
-	    wipe=$(screen -wipe)
+	    screen -wipe
 	fi
     fi
 
     if [ ! -n "$check" ]; then
-	echo "`date` - Voice /home/$VAR_B/voice/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - Voice /home/$VAR_B/voice/$VAR_D was stopped" >> $LOGP/logs/$LOGF.txt
 	echo "ID1"
     else
-	echo "`date` - Voice /home/$VAR_B/voice/$VAR_D cant be stopped" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - Voice /home/$VAR_B/voice/$VAR_D cant be stopped" >> $LOGP/logs/$LOGF.txt
 	echo "ID2"
     fi
 fi
@@ -158,7 +151,7 @@ fi
 if [ "$VAR_A" = "muserlist" ]; then
     cd /home/$VAR_B/voice/$VAR_D
     userlist=$(sqlite3 -html mumble-server.sqlite "SELECT user_id, name FROM users ORDER BY name ASC")
-    echo $userlist
+    echo "$userlist"
 fi
 
 if [ "$VAR_A" = "museradd" ]; then
@@ -206,7 +199,7 @@ fi
 
 if [ "$VAR_A" = "tuseradd" ]; then
     cd /home/user-webi/$VAR_D
-    adddate="`date +"%d%m%Y%H%M%S"`00000"
+    adddate="$(date +"%d%m%Y%H%M%S")00000"
     serverid=$(sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\"")
     sqlite server.dbs "INSERT INTO ts2_clients (i_client_server_id, b_client_privilege_serveradmin, s_client_name, s_client_password, dt_client_created) VALUES (\"$serverid\", \"$VAR_I\", \"$VAR_G\", \"$VAR_H\", \"$adddate\")"
     echo "ID1"
@@ -268,13 +261,12 @@ fi
 if [ "$VAR_A" = "tsdns" ]; then
   cd /home/tsdns
   if [ -f tsdns_settings.ini ]; then
-      sed -e "/$VAR_B/d" tsdns_settings.ini > tsdns_settings.bak
-      mv tsdns_settings.bak tsdns_settings.ini
+      sed -i '/'$VAR_B'/d' tsdns_settings.ini
   fi
   if [ "$VAR_C" != "" ]; then
       echo -e "\n$VAR_C=$VAR_B" >> tsdns_settings.ini
   fi
-  check=`ps aux | grep -v grep | grep -i "tsdnsserver_linux"`
+  check=$(ps aux | grep -v grep | grep -i "tsdnsserver_linux")
   if [ ! -n "$check" ]; then
       if [ -f tsdnsserver_linux_86 ]; then
           ./tsdnsserver_linux_x86 &
@@ -292,5 +284,6 @@ if [ "$VAR_A" = "tsdns" ]; then
   fi
   echo "ID1"
 fi
+
 
 exit 0
