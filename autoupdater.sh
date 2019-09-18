@@ -75,4 +75,5 @@ else
     echo "$(date) - There are no script updates available" >> $LOGP/logs/$LOGF.txt
 fi
 
+
 exit 0
