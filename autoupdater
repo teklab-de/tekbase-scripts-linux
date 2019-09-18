@@ -61,7 +61,7 @@ if [ ! -d ".git" ]; then
     newversion=2
     version=1
 else
-    version=`git rev-parse HEAD`
+    version=$(git rev-parse HEAD)
 
     git fetch
     git reset --hard origin/master
