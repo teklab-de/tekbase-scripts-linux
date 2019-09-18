@@ -6,8 +6,8 @@
 # Website: teklab.de
 #          teklab.net
 
-LOGF=`date +"%Y_%m"`
-LOGP=`pwd`
+LOGF=$(date +"%Y_%m")
+LOGP=$(pwd)
 
 if [ ! -d $LOGP/logs ]; then
     mkdir logs
@@ -18,34 +18,34 @@ if [ ! -f "$LOGP/logs/$LOGF.txt" ]; then
     chmod 0666 $LOGP/logs/$LOGF.txt
 fi
 
-chkgit=`which git`
+chkgit=$(which git)
 if [ "$chkgit" = "" ]; then
-    check=$(cat /etc/*-release | grep -i 'CentOS')
+    check=$(grep -i "CentOS" /etc/*-release)
     if [ -n "$check" ]; then
         yum install git -y
     fi
     
-    check=$(cat /etc/*-release | grep -i 'Debian')
+    check=$(grep -i "Debian" /etc/*-release)
     if [ -n "$check" -a "$os_install" = "" ]; then
         apt-get install git -y
     fi
     
-    check=$(cat /etc/*-release | grep -i 'Fedora')
+    check=$(grep -i "Fedora" /etc/*-release)
     if [ -n "$check" -a "$os_install" = "" ]; then
         yum install git -y
     fi
     
-    check=$(cat /etc/*-release | grep -i 'Red Hat')
+    check=$(grep -i "Red Hat" /etc/*-release)
     if [ -n "$check" -a "$os_install" = "" ]; then
         apt-get install git -y
     fi
     
-    check=$(cat /etc/*-release | grep -i 'SUSE')
+    check=$(grep -i "SUSE" /etc/*-release)
     if [ -n "$check" -a "$os_install" = "" ]; then
         zypper install git -y
     fi
     
-    check=$(cat /etc/*-release | grep -i 'Ubuntu')
+    check=$(grep -i "Ubuntu" /etc/*-release)
     if [ -n "$check" -a "$os_install" = "" ] || [ -n "$check" -a "$os_name" = "Debian" ]; then
         apt-get install git -y
     fi
@@ -70,9 +70,9 @@ else
 fi
 
 if [ "$version" != "$newversion" ]; then
-    echo "`date` - The scripts have been updated" >> $LOGP/logs/$LOGF.txt
+    echo "$(date) - The scripts have been updated" >> $LOGP/logs/$LOGF.txt
 else
-    echo "`date` - There are no script updates available" >> $LOGP/logs/$LOGF.txt
+    echo "$(date) - There are no script updates available" >> $LOGP/logs/$LOGF.txt
 fi
 
 exit 0
