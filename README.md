@@ -11,4 +11,4 @@ git clone https://github.com/teklab-de/tekbase-scripts-linux.git skripte
 ```
 
 ## License
-Copyright (c) TekLab.de. Code released under the [GNU AGPLv3 License](https://github.com/teklab-de/tekbase-installscript-linux/blob/master/LICENSE). The use by other commercial control panel providers is explicitly prohibited.
+Copyright (c) TekLab.de. Code released under the [GNU AGPLv3 License](https://github.com/teklab-de/tekbase-scripts-linux/blob/master/LICENSE). The use by other commercial control panel providers is explicitly prohibited.
