@@ -15,7 +15,6 @@ VAR_F=$6
 VAR_G=$7
 VAR_H=$8
 VAR_I=$9
-VAR_J=${10}
 
 if [ "$VAR_A" = "" ]; then
     ./tekbase
@@ -40,8 +39,8 @@ if [ ! -f "logs/$LOGF.txt" ]; then
 fi
 
 if [ -f settings.ini ]; then
-    vztyp=$(cat settings.ini | grep -i vztyp | awk '{print $2}')
-    vzconf=$(cat settings.ini | grep -i vzconf | awk '{print $2}')
+    vztyp=$(grep -i vztyp settings.ini | awk '{print $2}')
+    vzconf=$(grep -i vzconf settings.ini | awk '{print $2}')
     if [ ! -n "$vzconf" ]; then
     	vzconf="vz/conf"
     fi
@@ -51,11 +50,11 @@ fi
 if [ "$VAR_A" = "install" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver installrun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I")
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver installrun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
-	runcheck=$(vzctl status $VAR_B | grep -i running)
+	vzctl status $VAR_B | grep -i running
 	if [ -n "$runcheck" ]; then
 	    echo "ID3"
 	else
@@ -76,9 +75,9 @@ if [ "$VAR_A" = "installrun" ]; then
 	vzctl destroy $VAR_B
 	sleep 10
 	if [ ! -f /etc/$vzconf/$VAR_B.conf ]; then
-	    echo "`date` - VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
 	else
-	    echo "`date` - VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
 	fi
 	cd /etc/$vzconf
 	rm $VAR_B.conf.destroyed
@@ -119,20 +118,20 @@ if [ "$VAR_A" = "installrun" ]; then
             fi
     	fi
     	if [ ! -f $VAR_C.tar.gz ]; then
-            echo "`date` - Image $VAR_C.tar.gz cant be downloaded" >> $LOGP/logs/$LOGF.txt
+            echo "$(date) - Image $VAR_C.tar.gz cant be downloaded" >> $LOGP/logs/$LOGF.txt
         else
-            echo "`date` - Image $VAR_C.tar.gz was downloaded" >> $LOGP/logs/$LOGF.txt
+            echo "$(date) - Image $VAR_C.tar.gz was downloaded" >> $LOGP/logs/$LOGF.txt
     	fi	
         vzctl create $VAR_B --ostemplate $VAR_C
         if [ ! -f /etc/$vzconf/$VAR_B.conf ]; then
-            echo "`date` - VServer $VAR_B cant be created" >> $LOGP/logs/$LOGF.txt
+            echo "$(date) - VServer $VAR_B cant be created" >> $LOGP/logs/$LOGF.txt
         else
-            echo "`date` - VServer $VAR_B was created" >> $LOGP/logs/$LOGF.txt
+            echo "$(date) - VServer $VAR_B was created" >> $LOGP/logs/$LOGF.txt
 	    VAR_A="changerun"
 	    VAR_E="install"
         fi
     else
-	echo "`date` - VServer $VAR_B cant be created" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B cant be created" >> $LOGP/logs/$LOGF.txt
     fi
 fi
 
@@ -149,7 +148,7 @@ fi
 if [ "$VAR_A" = "delete" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver deleterun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I")
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver deleterun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -172,9 +171,9 @@ if [ "$VAR_A" = "deleterun" ]; then
     vzctl destroy $VAR_B
     sleep 10
     if [ ! -f /etc/$vzconf/$VAR_B.conf ]; then
-	echo "`date` - VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
     else
-	echo "`date` - VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
     fi
     cd /etc/$vzconf
     rm $VAR_B.conf.destroyed
@@ -188,11 +187,11 @@ fi
 if [ "$VAR_A" = "start" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver startrun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I")
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver startrun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
-	runcheck=$(vzctl status $VAR_B | grep -i running)
+	vzctl status $VAR_B | grep -i running
 	if [ -n "$runcheck" ]; then
 	    echo "ID3"
 	else
@@ -212,16 +211,16 @@ if [ "$VAR_A" = "startrun" ]; then
 	vzctl start $VAR_B
 	runcheck=$(vzctl status $VAR_B | grep -i running)
 	if [ ! -n "$runcheck" ]; then
-	    echo "`date` - VServer $VAR_B cant be started" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - VServer $VAR_B cant be started" >> $LOGP/logs/$LOGF.txt
 	else
-	    echo "`date` - VServer $VAR_B was started" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - VServer $VAR_B was started" >> $LOGP/logs/$LOGF.txt
 	fi
     fi
 
 if [ "$VAR_A" = "stop" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver stoprun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I")
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver stoprun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -241,9 +240,9 @@ if [ "$VAR_A" = "stoprun" ]; then
     sleep 2
     check=$(vzctl status $VAR_B | grep -i running)
     if [ ! -n "$check" ]; then
-	echo "`date` - VServer $VAR_B was stopped" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B was stopped" >> $LOGP/logs/$LOGF.txt
     else
-	echo "`date` - VServer $VAR_B cant be stopped" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B cant be stopped" >> $LOGP/logs/$LOGF.txt
     fi
 fi
 
@@ -266,13 +265,13 @@ if [ "$VAR_A" = "list" ]; then
 fi
 
 if [ "$VAR_A" = "process" ]; then
-    runchk=$(vzctl exec $VAR_B kill -9 $VAR_C)
+    vzctl exec $VAR_B kill -9 $VAR_C
     check=$(vzctl exec $VAR_B ps -p $VAR_C | grep -v "PID TTY")
     if [ ! -n "$check" ]; then
-	echo "`date` - VServer $VAR_B process $VAR_C was killed" >> $LOGF/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B process $VAR_C was killed" >> $LOGF/logs/$LOGF.txt
 	echo "ID1"
     else
-	echo "`date` - VServer $VAR_B process $VAR_C cant be killed" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B process $VAR_C cant be killed" >> $LOGP/logs/$LOGF.txt
 	echo "ID2"
     fi
 fi
@@ -296,7 +295,7 @@ if [ "$VAR_A" = "service" ]; then
     if [ -n "$check" ]; then
 	runcheck=$(vzctl exec $VAR_B find /etc/init.d/$VAR_C)
 	if [ -n "$runcheck" ]; then
-	    runcheck=$(vzctl exec $VAR_B /etc/init.d/$VAR_C $VAR_D)
+	    vzctl exec $VAR_B /etc/init.d/$VAR_C $VAR_D
 	    echo "ID1"
 	fi
     fi
@@ -318,7 +317,7 @@ fi
 if [ "$VAR_A" = "backup" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver backuprun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I")
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver backuprun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -345,16 +344,16 @@ if [ "$VAR_A" = "backuprun" ]; then
     cd /usr/vz/$VAR_B
     checkfile=$(find vzdump*)
     if [ -n "$checkfile" ]; then
-        echo "`date` - VServer $VAR_B backup was created" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - VServer $VAR_B backup was created" >> $LOGP/logs/$LOGF.txt
     else
-        echo "`date` - VServer $VAR_B backup cant be created" >> $LOGP/logs/$LOGF.txt
+        echo "$(date) - VServer $VAR_B backup cant be created" >> $LOGP/logs/$LOGF.txt
     fi
 fi
 
 if [ "$VAR_A" = "remove" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver removerun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I")
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver removerun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -376,16 +375,16 @@ if [ "$VAR_A" = "removerun" ]; then
 	mv $VAR_C $file.old
 	rm $file.log
 	rm $file.old
-	echo "`date` - VServer $VAR_B backup $VAR_C was deleted" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B backup $VAR_C was deleted" >> $LOGP/logs/$LOGF.txt
    else
-	echo "`date` - VServer $VAR_B backup $VAR_C cant be founded or was already deleted" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B backup $VAR_C cant be founded or was already deleted" >> $LOGP/logs/$LOGF.txt
    fi
 fi
 
 if [ "$VAR_A" = "restore" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver restorerun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I")
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver restorerun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -402,7 +401,7 @@ fi
 if [ "$VAR_A" = "restorerun" ]; then
     check=$(vzctl status $VAR_B | grep -i running)
     if [ ! -f /usr/vz/$VAR_B/$VAR_C ]; then
-	echo "`date` - VServer $VAR_B backup $VAR_C cant be founded" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B backup $VAR_C cant be founded" >> $LOGP/logs/$LOGF.txt
     else
 	if [ -n "$check" ]; then
 	    vzctl stop $VAR_B
@@ -414,9 +413,9 @@ if [ "$VAR_A" = "restorerun" ]; then
 	vzctl start $VAR_B
 	runcheck=$(vzctl status $VAR_B | grep -i running)
 	if [ ! -n "$runcheck" ]; then
-	    echo "`date` - VServer $VAR_B backup $VAR_C cant be restored" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - VServer $VAR_B backup $VAR_C cant be restored" >> $LOGP/logs/$LOGF.txt
 	else
-	    echo "`date` - VServer $VAR_B backup $VAR_C was restored" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - VServer $VAR_B backup $VAR_C was restored" >> $LOGP/logs/$LOGF.txt
 	fi
     fi
 fi
@@ -424,7 +423,7 @@ fi
 if [ "$VAR_A" = "change" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	runscr=$(screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver changerun $VAR_B "$VAR_C" "$VAR_D")
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver changerun $VAR_B "$VAR_C" "$VAR_D"
     fi
     echo "ID1"
 fi
@@ -438,9 +437,9 @@ if [ "$VAR_A" = "changerun" ]; then
 	    vzctl exec $VAR_B mkdir -p /dev/net
 	    vzctl exec $VAR_B mknod /dev/net/tun c 10 200
 	    vzctl exec $VAR_B chmod 600 /dev/net/tun
-	    echo "`date` - VServer $VAR_B Tun & Tap was activated" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - VServer $VAR_B Tun & Tap was activated" >> $LOGP/logs/$LOGF.txt
         else
-	    echo "`date` - VServer $VAR_B Tun & Tap was not activated" >> $LOGP/logs/$LOGF.txt
+	    echo "$(date) - VServer $VAR_B Tun & Tap was not activated" >> $LOGP/logs/$LOGF.txt
         fi
 	if [ -f $LOGP/cache/vsettings_$VAR_B.lst ]; then
 	    while read LINE
@@ -451,9 +450,9 @@ if [ "$VAR_A" = "changerun" ]; then
 	    done < $LOGP/cache/vsettings_$VAR_B.lst
 	    rm $LOGP/cache/vsettings_$VAR_B.lst
 	fi
-	echo "`date` - VServer $VAR_B config was changed" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B config was changed" >> $LOGP/logs/$LOGF.txt
     else
-	echo "`date` - VServer $VAR_B config cant be changed" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B config cant be changed" >> $LOGP/logs/$LOGF.txt
     fi
     VAR_A="ipadd"
 fi
@@ -469,9 +468,9 @@ if [ "$VAR_A" = "ipadd" ]; then
 	    done < $LOGP/cache/vipadd_$VAR_B.lst
 	    rm $LOGP/cache/vipadd_$VAR_B.lst
 	fi
-	echo "`date` - VServer $VAR_B new IP was added" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B new IP was added" >> $LOGP/logs/$LOGF.txt
     else
-	echo "`date` - VServer $VAR_B new IP cant be added" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B new IP cant be added" >> $LOGP/logs/$LOGF.txt
     fi
     VAR_A="ipdel"
 fi
@@ -487,9 +486,9 @@ if [ "$VAR_A" = "ipdel" ]; then
 	    done < $LOGP/cache/vipdel_$VAR_B.lst
 	    rm $LOGP/cache/vipdel_$VAR_B.lst
 	fi
-	echo "`date` - VServer $VAR_B IP was removed" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B IP was removed" >> $LOGP/logs/$LOGF.txt
     else
-	echo "`date` - VServer $VAR_B IP cant be removed" >> $LOGP/logs/$LOGF.txt
+	echo "$(date) - VServer $VAR_B IP cant be removed" >> $LOGP/logs/$LOGF.txt
     fi
     if [ "$VAR_E" = "install" ]; then
 	VAR_A="rootpw"
@@ -524,5 +523,6 @@ if [ "$VAR_A" = "rootpw" ]; then
     vzctl set $VAR_B --userpasswd root:$VAR_C
     echo "ID1"
 fi
+
 
 exit 0
