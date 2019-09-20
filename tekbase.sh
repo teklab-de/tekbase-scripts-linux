@@ -532,7 +532,7 @@ EOF
             mkdir -p $VAR_B$VAR_D
             chmod 0777 $VAR_B$VAR_D
             cd /home/$VAR_B/$VAR_C/$VAR_D
-            for LINE in $(echo "$VAR_E" | sed -e 's/;/\n/g')
+            for LINE in $(echo "${VAR_E//;/$'\n'}")
             do
                 if [ -d $LINE ]; then
                     cp -r --parents $LINE $LOGP/cache/$VAR_B$VAR_D
