@@ -91,7 +91,7 @@ if [ "$VAR_A" = "installrun" ]; then
             cd $LOGC
             wget $VAR_G/$VAR_C.tar.gz
             mv $VAR_C.tar.gz /vz/template/cache/$VAR_C.tar.gz
-            cd $LOGP/cache
+            cd ..
             rm -r $LOGC
     	else
             if [ -f $VAR_B$VAR_C.md5 ]; then
@@ -113,7 +113,7 @@ if [ "$VAR_A" = "installrun" ]; then
                 if [ "$dowmd5" != "$chkmd5" ]; then
                     mv $VAR_C.tar.gz /vz/template/cache/$VAR_C.tar.gz
                 fi
-                cd $LOGP/cache
+		cd ..
                 rm -r $LOGC
             fi
     	fi
