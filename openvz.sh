@@ -69,6 +69,9 @@ if [ "$VAR_A" = "installrun" ]; then
 	check=$(vzctl status $VAR_B | grep -i running)
 	if [ -n "$check" ]; then
 	    vzctl stop $VAR_B
+	    if [ -f "/var/lib/vz/root/$VAR_B" ]; then
+                umount -l "/var/lib/vz/root/$VAR_B"
+            fi
 	fi
 	sleep 5
 	vzctl destroy $VAR_B
@@ -165,6 +168,9 @@ if [ "$VAR_A" = "deleterun" ]; then
     check=$(vzctl status $VAR_B | grep -i running)
     if [ -n "$check" ]; then
 	vzctl stop $VAR_B
+	if [ -f "/var/lib/vz/root/$VAR_B" ]; then
+            umount -l "/var/lib/vz/root/$VAR_B"
+        fi
     fi
     sleep 5
     vzctl destroy $VAR_B
@@ -205,6 +211,9 @@ if [ "$VAR_A" = "startrun" ]; then
 	check=$(vzctl status $VAR_B | grep -i running)
 	if [ -n "$check" ]; then
 	    vzctl stop $VAR_B
+	    if [ -f "/var/lib/vz/root/$VAR_B" ]; then
+                umount -l "/var/lib/vz/root/$VAR_B"
+            fi
 	fi
 	sleep 2
 	vzctl start $VAR_B
@@ -236,6 +245,9 @@ fi
 
 if [ "$VAR_A" = "stoprun" ]; then
     vzctl stop $VAR_B
+    if [ -f "/var/lib/vz/root/$VAR_B" ]; then
+        umount -l "/var/lib/vz/root/$VAR_B"
+    fi
     sleep 2
     check=$(vzctl status $VAR_B | grep -i running)
     if [ ! -n "$check" ]; then
@@ -403,6 +415,9 @@ if [ "$VAR_A" = "restorerun" ]; then
     else
 	if [ -n "$check" ]; then
 	    vzctl stop $VAR_B
+	    if [ -f "/var/lib/vz/root/$VAR_B" ]; then
+                umount -l "/var/lib/vz/root/$VAR_B"
+            fi
 	    sleep 5
 	    vzctl destroy $VAR_B
 	    sleep 10
