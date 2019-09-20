@@ -21,7 +21,7 @@ if [ "$VAR_A" = "" ]; then
 fi
 
 LOGF=$(date +"%Y_%m")
-LOGC=$(date +"%m_%Y-%H_%M_%S")
+LOGC=$(date +"%Y_%m-%H_%M_%S")
 LOGP=$(pwd)
 
 if [ ! -d logs ]; then
