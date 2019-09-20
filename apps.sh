@@ -116,7 +116,7 @@ if [ "$VAR_A" = "stop" ]; then
     cd /home/$VAR_B/apps/$VAR_D
 
     if [ -f $LOGP/includes/stop/$VAR_E ]; then
-	check=$($LOGP/includes/stop/$VAR_E '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G' '$VAR_H')
+	check=$($LOGP/includes/stop/$VAR_E "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H")
     else
         if [ "$VAR_G" = "" ]; then
 	    kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "apps$VAR_C-X" | awk '{print $2}')
@@ -166,7 +166,7 @@ fi
 if [ "$VAR_A" = "updaterun" ]; then
     sleep 2
     cd /home/$VAR_B/apps/$VAR_D
-    comlist=$(echo "$VAR_E" | sed -e 's/;/\n/g')
+    comlist=$(echo "${VAR_E//;/$'\n'}")
     while read LINE
     do
     	if [ "$LINE" != "" ]; then
