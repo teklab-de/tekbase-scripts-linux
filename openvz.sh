@@ -85,8 +85,6 @@ if [ "$VAR_A" = "installrun" ]; then
 	rm $VAR_B.conf.destroyed
     fi
     if [ ! -f /etc/$vzconf/$VAR_B.conf ]; then
-        cd $LOGP
-	mkdir -p cache 	
     	cd /vz/template/cache
     	if [ ! -f $VAR_C.tar.gz ]; then
             mkdir $LOGC
