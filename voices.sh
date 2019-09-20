@@ -180,7 +180,7 @@ if [ "$VAR_A" = "tuserlist" ]; then
     cd /home/user-webi/$VAR_D
     serverid=$(sqlite server.dbs "SELECT i_server_id FROM ts2_servers WHERE i_server_udpport=\"$VAR_F\"")
     userlist=$(sqlite -html server.dbs "SELECT i_client_id, s_client_name, b_client_privilege_serveradmin FROM ts2_clients WHERE i_client_server_id=\"$serverid\" ORDER BY s_client_name ASC")
-    userlist=$(echo $userlist | sed -e 's/&/_/g')
+    userlist=$(echo ${userlist//&/_})
     tscounter=0
     tsnewline=""
     for LINE in $userlist
