@@ -14,7 +14,7 @@ if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
 
-LOGF=$(date +"%m_%Y")
+LOGF=$(date +"%Y_%m")
 LOGP=$(pwd)
 
 if [ ! -d logs ]; then
