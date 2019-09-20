@@ -49,7 +49,7 @@ fi
 if [ "$VAR_A" = "install" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver installrun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver installrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -147,7 +147,7 @@ fi
 if [ "$VAR_A" = "delete" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver deleterun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver deleterun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -186,7 +186,7 @@ fi
 if [ "$VAR_A" = "start" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver startrun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver startrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -219,7 +219,7 @@ if [ "$VAR_A" = "startrun" ]; then
 if [ "$VAR_A" = "stop" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver stoprun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver stoprun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -316,7 +316,7 @@ fi
 if [ "$VAR_A" = "backup" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver backuprun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver backuprun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -351,7 +351,7 @@ fi
 if [ "$VAR_A" = "remove" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver removerun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver removerun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -382,7 +382,7 @@ fi
 if [ "$VAR_A" = "restore" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver restorerun $VAR_B "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver restorerun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
@@ -421,7 +421,7 @@ fi
 if [ "$VAR_A" = "change" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
-	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver changerun $VAR_B "$VAR_C" "$VAR_D"
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver changerun "$VAR_B" "$VAR_C" "$VAR_D"
     fi
     echo "ID1"
 fi
