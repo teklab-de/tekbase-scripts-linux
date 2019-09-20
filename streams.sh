@@ -212,7 +212,7 @@ fi
 if [ "$VAR_A" = "updaterun" ]; then
     sleep 2
     cd /home/$VAR_B/streams/$VAR_D
-    comlist=$(echo "$VAR_E" | sed -e 's/;/\n/g')
+    comlist=$(echo "${VAR_E//;/$'\n'}")
     while read LINE
     do
     	if [ "$LINE" != "" ]; then
