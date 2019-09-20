@@ -53,7 +53,7 @@ if [ "$VAR_A" = "install" ]; then
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
     fi
     if [ ! -n "$check" ]; then
-	vzctl status $VAR_B | grep -i running
+	runcheck=$(vzctl status $VAR_B | grep -i running)
 	if [ -n "$runcheck" ]; then
 	    echo "ID3"
 	else
