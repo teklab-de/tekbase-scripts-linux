@@ -20,7 +20,7 @@ if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
 
-LOGF=$(date +"%m_%Y")
+LOGF=$(date +"%Y_%m")
 LOGC=$(date +"%m_%Y-%H_%M_%S")
 LOGP=$(pwd)
 
