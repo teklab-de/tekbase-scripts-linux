@@ -15,12 +15,10 @@ VAR_F=$6
 VAR_G=$7
 VAR_H=$8
 VAR_I=$9
-# INSTALL VAR_C=TYP, VAR_D=Imagedatei, VAR_G=Imageserver
+
 if [ "$VAR_A" = "" ]; then
     ./tekbase
 fi
-
-PVEVERSION=$(pveversion | cut -d"/" -f2 | cut -d"." -f1)
   
 LOGF=$(date +"%Y_%m")
 LOGC=$(date +"%Y_%m-%H_%M_%S")
@@ -40,7 +38,23 @@ if [ ! -f "logs/$LOGF.txt" ]; then
     chmod 0666 $LOGP/logs/$LOGF.txt
 fi
 
+#PVEVERSION=$(pveversion | cut -d"/" -f2 | cut -d"." -f1)
+if [ "$VAR_C" == "kvm" ]; then
+    pvefolder="/etc/pve/qemu-server"
+    pvetype="KVM"
+    pveimagefolder="/var/lib/vz/template/iso"
+    pveext="iso"
+fi
+if [ "$VAR_C" == "lxc" ]; then
+    pvefolder="/etc/pve/lxc"
+    pvetype="LXC"
+    pveimagefolder="/var/lib/vz/template/cache"
+    pveext="tar.gz"
+fi
+
+
 if [ "$VAR_A" = "install" ]; then
+    # VAR_B=ID, VAR_C=Type, VAR_D=Image, VAR_G=Imageserver
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i p$VAR_A$VAR_B-X)
     if [ ! -n "$startchk" ]; then
         screen -A -m -d -S v$VAR_A$VAR_B-X ./proxmox installrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
@@ -72,15 +86,7 @@ if [ "$VAR_A" = "installrun" ]; then
             fi
             sleep 5
             qm destroy $VAR_B
-            sleep 10
-            if [ ! -f /etc/pve/qemu-server/$VAR_B.conf ]; then
-                echo "$(date) - KVM VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
-            else
-                echo "$(date) - KVM VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
-            fi
-            cd /etc/pve/qemu-server
-            rm $VAR_B.conf.destroyed
-        fi
+	fi
         if [ "$VAR_C" == "lxc" ]; then
             check=$(pct list | grep -i "stopped" | grep -i $VAR_B | awk '{print $2}')
             if [ -n "$check" ]; then
@@ -88,37 +94,25 @@ if [ "$VAR_A" = "installrun" ]; then
             fi
             sleep 5
             pct destroy $VAR_B
-            sleep 10
-            if [ ! -f /etc/pve/lxc/$VAR_B.conf ]; then
-                echo "$(date) - LXC VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
+        fi        
+        sleep 10	
+	if [ ! -f $pvefolder/$VAR_B.conf ]; then
+                echo "$(date) - $pvetype VServer $VAR_B was deleted" >> $LOGP/logs/$LOGF.txt
             else
-                echo "$(date) - LXC VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
+                echo "$(date) - $pvetype VServer $VAR_B cant be deleted" >> $LOGP/logs/$LOGF.txt
             fi
-            cd /etc/pve/lxc
+            cd $pvefolder
             rm $VAR_B.conf.destroyed
         fi
     fi
-
-    if [ "$VAR_C" == "kvm" ]; then
-    	pvefolder="qemu-server"
-	pvetype="KVM"
-	pveimagefolder="iso"
-	pveext="iso"
-    fi
-    if [ "$VAR_C" == "kvm" ]; then
-    	pvefolder="lxc"
-	pvetype="LXC"
-	pveimagefolder="cache"
-	pveext="tar.gz"
-    fi
-    
-    if [ ! -f /etc/pve/$pvefolder/$VAR_B.conf ]; then
-        cd /var/lib/vz/template/$pveimagefolder
+  
+    if [ ! -f $pvefolder/$VAR_B.conf ]; then
+        cd $pveimagefolder
     	if [ ! -f $VAR_D.$pveext ]; then
             mkdir $LOGC
             cd $LOGC
             wget $VAR_G/$VAR_D.$pveext
-            mv $VAR_D.iso /var/lib/vz/template/iso/$VAR_D.$pveext
+            mv $VAR_D.$pveext $pveimagefolder/$VAR_D.$pveext
             cd ..
             rm -r $LOGC
     	else
@@ -139,7 +133,7 @@ if [ "$VAR_A" = "installrun" ]; then
                 wget $VAR_G/$VAR_D.$pveext
                 dowmd5=$(md5sum $VAR_D.$pveext | awk '{print $1}')
                 if [ "$dowmd5" != "$chkmd5" ]; then
-                    mv $VAR_D.$pveext /var/lib/vz/template/$pveimagefolder/$VAR_D.$pveext
+                    mv $VAR_D.$pveext $pveimagefolder/$VAR_D.$pveext
                 fi
 	        cd ..
                 rm -r $LOGC
@@ -156,7 +150,7 @@ if [ "$VAR_A" = "installrun" ]; then
         if [ "$VAR_C" == "lxc" ]; then
 	    pct create $VAR_B "$VAR_F"
         fi
-        if [ ! -f /etc/pve/$pvefolder/$VAR_B.conf ]; then
+        if [ ! -f $pvefolder/$VAR_B.conf ]; then
             echo "$(date) - $pvetype VServer $VAR_B cant be created" >> $LOGP/logs/$LOGF.txt
         else
             echo "$(date) - $pvetype VServer $VAR_B was created" >> $LOGP/logs/$LOGF.txt
@@ -165,6 +159,43 @@ if [ "$VAR_A" = "installrun" ]; then
         fi
     else
 	echo "$(date) - $pvetype VServer $VAR_B cant be created" >> $LOGP/logs/$LOGF.txt
+    fi
+fi
+
+if [ "$VAR_A" = "statuscheck" ]; then
+    checka=$(ps aux | grep -v grep | grep -i pbackup$VAR_B-X)
+    checkb=$(ps aux | grep -v grep | grep -i prestore$VAR_B-X)
+    if [ ! -n "$checka" ] && [ ! -n "$checkb" ]; then
+	echo "ID1"
+    else
+	echo "ID2"
+    fi
+fi
+
+if [ "$VAR_A" = "delete" ]; then
+    startchk=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
+    if [ ! -n "$startchk" ]; then
+	screen -A -m -d -S v$VAR_A$VAR_B-X ./vserver deleterun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G" "$VAR_H" "$VAR_I"
+	check=$(ps aux | grep -v grep | grep -i screen | grep -i v$VAR_A$VAR_B-X)
+    fi
+    if [ ! -n "$check" ]; then
+	if [ -f $pvefolder/$VAR_B.conf ]; then
+	    echo "ID3"
+	else
+	    echo "ID2"
+	fi
+    else
+	echo "ID1"
+    fi
+fi
+
+if [ "$VAR_A" = "deleterun" ]; then
+    # break
+    if [ "$VAR_C" == "kvm" ]; then
+        #
+    fi
+    if [ "$VAR_C" == "lxc" ]; then
+        #
     fi
 fi
 
