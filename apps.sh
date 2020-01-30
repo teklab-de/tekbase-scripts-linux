@@ -155,7 +155,7 @@ fi
 if [ "$VAR_A" = "update" ]; then
     check=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
     if [ ! -n "$check" ]; then
-	screen -A -m -d -S b$VAR_B$VAR_D-X ./apps updaterun "$VAR_B" "$VAR_C" "$VAR_D"
+	screen -A -m -d -S b$VAR_B$VAR_D-X ./apps updaterun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E"
     	echo "ID1"
     else
         echo "$(date) - Update of /home/$VAR_B/apps/$VAR_D cant be installed" >> $LOGP/logs/$LOGF.txt
