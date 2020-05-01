@@ -69,11 +69,21 @@ else
     newversion=$(git rev-parse HEAD)
 fi
 
+
 if [ "$version" != "$newversion" ]; then
     echo "$(date) - The scripts have been updated" >> $LOGP/logs/$LOGF.txt
 else
     echo "$(date) - There are no script updates available" >> $LOGP/logs/$LOGF.txt
 fi
+
+
+##############################
+# TekBASE 8.x compatibility  #
+##############################
+for FILE in $(find *.sh)
+do
+    cp $FILE ${FILE%.sh}
+done
 
 
 exit 0
