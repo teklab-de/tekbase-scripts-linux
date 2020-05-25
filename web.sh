@@ -135,8 +135,6 @@ if [ "$VAR_A" = "delete" ]; then
 	fi
 	echo "ID1"
     else
-	echo "ID1"
-    else
         echo "ID2"			
     fi
 fi
