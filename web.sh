@@ -109,4 +109,41 @@ if [ "$VAR_A" = "dbpasswd" ]; then
     fi
 fi
 
+if [ "$VAR_A" = "activate" ]; then
+    if [ -f includes/sites/$VAR_B.conf ]; then
+        cp includes/sites/$VAR_B.conf /etc/apache2/sites-enabled
+	echo "ID1"
+    else
+        echo "ID2"			
+    fi
+fi
+
+if [ "$VAR_A" = "deactivate" ]; then
+    if [ -f /etc/apache2/sites-enabled/$VAR_B.conf ]; then
+        rm /etc/apache2/sites-enabled/$VAR_B.conf
+	echo "ID1"
+    else
+        echo "ID2"			
+    fi
+fi
+
+if [ "$VAR_A" = "delete" ]; then
+    if [ -f includes/sites/$VAR_B.conf ]; then
+        rm includes/sites/$VAR_B.conf
+	if [ -f /etc/apache2/sites-enabled/$VAR_B.conf ]; then
+            rm /etc/apache2/sites-enabled/$VAR_B.conf
+	fi
+	echo "ID1"
+    else
+	echo "ID1"
+    else
+        echo "ID2"			
+    fi
+fi
+
+if [ "$VAR_A" = "apache" ]; then
+    /etc/init.d/apache2 reload
+    echo "ID1"
+fi
+
 exit 0
