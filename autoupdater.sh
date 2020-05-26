@@ -37,7 +37,7 @@ if [ "$chkgit" = "" ]; then
     
     check=$(grep -i "Red Hat" /etc/*-release)
     if [ -n "$check" -a "$os_install" = "" ]; then
-        apt-get install git -y
+        yum install git -y
     fi
     
     check=$(grep -i "SUSE" /etc/*-release)
