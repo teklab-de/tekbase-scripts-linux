@@ -36,17 +36,17 @@ if [ "$chkgit" = "" ]; then
     fi
     
     check=$(grep -i "Red Hat" /etc/*-release)
-    if [ -n "$check" -a "$os_install" = "" ]; then
+    if [ -n "$check" ] && [ "$os_install" = "" ]; then
         yum install git -y
     fi
     
     check=$(grep -i "SUSE" /etc/*-release)
-    if [ -n "$check" -a "$os_install" = "" ]; then
+    if [ -n "$check" ] && [ "$os_install" = "" ]; then
         zypper install git -y
     fi
     
     check=$(grep -i "Ubuntu" /etc/*-release)
-    if [ -n "$check" -a "$os_install" = "" ] || [[ -n "$check" ] && [ "$os_name" = "Debian" ]]; then
+    if [[ -n "$check" ] && [ "$os_install" = "" ]] || [[ -n "$check" ] && [ "$os_name" = "Debian" ]]; then
         apt-get install git -y
     fi
 fi
@@ -80,7 +80,7 @@ fi
 ##############################
 # TekBASE 8.x compatibility  #
 ##############################
-for FILE in $(find *.sh)
+for FILE in $(find ./*.sh)
 do
     cp $FILE ${FILE%.sh}
 done
