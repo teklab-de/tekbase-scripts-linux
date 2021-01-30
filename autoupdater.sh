@@ -46,7 +46,7 @@ if [ "$chkgit" = "" ]; then
     fi
     
     check=$(grep -i "Ubuntu" /etc/*-release)
-    if [ -n "$check" -a "$os_install" = "" ] || [ -n "$check" -a "$os_name" = "Debian" ]; then
+    if [ -n "$check" -a "$os_install" = "" ] || [[ -n "$check" ] && [ "$os_name" = "Debian" ]]; then
         apt-get install git -y
     fi
 fi
