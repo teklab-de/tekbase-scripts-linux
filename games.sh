@@ -56,7 +56,7 @@ if [ "$VAR_A" = "start" ]; then
     cd /home/$VAR_B/server/$VAR_D
 
     if [ -f $LOGP/includes/$VAR_E/stop ]; then
-	check=$($LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D")
+	$LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D"
     else
 	kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}')
 	check=$(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X")
@@ -101,7 +101,7 @@ if [ "$VAR_A" = "stop" ]; then
     fi
 
     if [ -f $LOGP/includes/$VAR_E/stop ]; then
-        check=$($LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D")
+        $LOGP/includes/$VAR_E/stop "$VAR_B" "$VAR_C" "$VAR_D"
     else
         kill -9 $(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X" | awk '{print $2}')
         check=$(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X")
