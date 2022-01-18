@@ -45,10 +45,9 @@ if [ "$VAR_A" = "start" ]; then
     fi
 
     echo "#! /bin/bash" >> $LOGP/restart/$VAR_B-server-$VAR_C
-    echo "HOME=\"/home/$VAR_B\";" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "check=\`ps aux | grep -v grep | grep -i screen | grep -i \"server$VAR_C-X\"\`" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "if [ ! -n \"\$check\" ]; then" >> $LOGP/restart/$VAR_B-server-$VAR_C
-    echo "cd $LOGP;sudo -u $VAR_B ./games 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G'" >> $LOGP/restart/$VAR_B-server-$VAR_C
+    echo "cd $LOGP;sudo -u $VAR_B ./games.sh 'start' '$VAR_B' '$VAR_C' '$VAR_D' '$VAR_E' '$VAR_F' '$VAR_G'" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "fi" >> $LOGP/restart/$VAR_B-server-$VAR_C
     echo "exit 0" >> $LOGP/restart/$VAR_B-server-$VAR_C
     chmod 0755 $LOGP/restart/$VAR_B-server-$VAR_C
@@ -67,9 +66,9 @@ if [ "$VAR_A" = "start" ]; then
 	if [ -f screenlog.0 ]; then
 	    echo "" > screenlog.0
 	fi
-
-	HOME="/home/$VAR_B";
-
+	
+	HOME="/home/$VAR_B/server/$VAR_D"
+	
 	if [ -f $LOGP/includes/$VAR_E/start ]; then
 	    $LOGP/includes/$VAR_E/start "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_F"
 	    check="ID1"
@@ -81,6 +80,8 @@ if [ "$VAR_A" = "start" ]; then
 	    fi
 	    check=$(ps aux | grep -v grep | grep -i screen | grep -i "server$VAR_C-X")
 	fi
+	
+	HOME="/home/$VAR_B"
 
 	if [ -n "$check" ]; then
 	    echo "$(date) - Game /home/$VAR_B/server/$VAR_D was started ($VAR_F)" >> $LOGP/logs/$LOGF.txt
@@ -134,7 +135,7 @@ fi
 if [ "$VAR_A" = "update" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
     if [ ! -n "$startchk" ]; then
-        screen -A -m -d -S b$VAR_B$VAR_D-X ./games updaterun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E"
+        screen -A -m -d -S b$VAR_B$VAR_D-X ./games.sh updaterun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E"
         check=$(ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X")
         if [ ! -n "$check" ]; then
             echo "ID2"
@@ -163,7 +164,7 @@ fi
 if [ "$VAR_A" = "create" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
     if [ ! -n "$startchk" ]; then
-        screen -A -m -d -S b$VAR_B$VAR_D-X ./games createrun "$VAR_B" "$VAR_C" "$VAR_D"
+        screen -A -m -d -S b$VAR_B$VAR_D-X ./games.sh createrun "$VAR_B" "$VAR_C" "$VAR_D"
         check=$(ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X")
         if [ ! -n "$check" ]; then
             cd /home/$VAR_B/server
@@ -203,7 +204,7 @@ fi
 if [ "$VAR_A" = "extract" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_B$VAR_D-X")
     if [ ! -n "$startchk" ]; then
-        screen -A -m -d -S b$VAR_B$VAR_D-X ./games extractrun "$VAR_B" "$VAR_C" "$VAR_D"
+        screen -A -m -d -S b$VAR_B$VAR_D-X ./games.sh extractrun "$VAR_B" "$VAR_C" "$VAR_D"
         check=$(ps aux | grep -v grep | grep -i screen | grep -i "b$VAR_B$VAR_D-X")
         if [ ! -n "$check" ]; then
             echo "ID2"
@@ -274,7 +275,7 @@ fi
 if [ "$VAR_A" = "install" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "ma$VAR_B$VAR_E-X")
     if [ ! -n "$startchk" ]; then
-        screen -A -m -d -S ma$VAR_B$VAR_E-X ./games installrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"
+        screen -A -m -d -S ma$VAR_B$VAR_E-X ./games.sh installrun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"
         check=$(ps aux | grep -v grep | grep -i screen | grep -i "ma$VAR_B$VAR_E-X")
     fi
     if [ ! -n "$check" ]; then
@@ -309,7 +310,7 @@ fi
 if [ "$VAR_A" = "remove" ]; then
     startchk=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B$VAR_E-X")
     if [ ! -n "$startchk" ]; then
-        screen -A -m -d -S $VAR_F$VAR_B$VAR_E-X ./games removerun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"
+        screen -A -m -d -S $VAR_F$VAR_B$VAR_E-X ./games.sh removerun "$VAR_B" "$VAR_C" "$VAR_D" "$VAR_E" "$VAR_F" "$VAR_G"
         check=$(ps aux | grep -v grep | grep -i screen | grep -i "$VAR_F$VAR_B$VAR_E-X")
     fi
     if [ ! -n "$check" ]; then
