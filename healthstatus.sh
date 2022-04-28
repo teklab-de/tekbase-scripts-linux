@@ -9,14 +9,15 @@
 VAR_A=$1
 VAR_C=$3
 
-checkpasswd() {
+function checkpasswd {
+    chkpwd=$1
     originalpw=$(grep -w "root" /etc/shadow | cut -d: -f2)
     algo=$(echo $originalpw | cut -d'$' -f2)
     salt=$(echo $originalpw | cut -d'$' -f3)
-    export VAR_C
+    export chkpwd
     export algo
     export salt
-    genpw=$(perl -le 'print crypt("$ENV{VAR_C}","\$$ENV{algo}\$$ENV{salt}\$")')
+    genpw=$(perl -le 'print crypt("$ENV{chkpwd}","\$$ENV{algo}\$$ENV{salt}\$")')
     if [ "$genpw" == "$originalpw" ]; then
 	echo "error";
     else
@@ -97,7 +98,7 @@ if [ "$VAR_A" = "dedicated" ]; then
     ipv4=$(ifconfig | grep -v "127.0.0.1" | awk -v i=1 '/inet addr/{print "\""i++"\":\""substr($2,6)"\""}' | tr "\n" ",")
     trafficdays=$(vnstat -i $(ip route | column -t | awk '{print $5}' | head -n1) -d | grep -v "eth\|day\|estimated\|-" | sed 's/KiB/KB/g' | sed 's/MiB/MB/g' | sed 's/GiB/GB/g' | sed 's/TiB/TB/g' | sed 's/\//./g' | awk 'NR>2 {print "{\"date\":\""$1"\",\"rx\":\""$2,$3"\",\"tx\":\""$5,$6"\"}"}' | tr "\n" ",")
     trafficmonths=$(vnstat -i $(ip route | column -t | awk '{print $5}' | head -n1) -m | grep -v "eth\|month\|estimated\|-" | sed 's/KiB/KB/g' | sed 's/MiB/MB/g' | sed 's/GiB/GB/g' | sed 's/TiB/TB/g' | sed 's/\//./g' | awk 'NR>2 {print "{\"date\":\""$1,$2"\",\"rx\":\""$3,$4"\",\"tx\":\""$6,$7"\"}"}' | tr "\n" ",")
-    echo "{\"cpu\":{$cpuinfo\"cores\":{$cpuperc},$cputemp},\"ram\":{$memtype\"total\":\"$memtotal\",\"free\":\"$memfree\"},\"hdds\":[$hdds],\"ipv4\":{$ipv4},\"traffic\":{\"daily\":[$trafficdays],\"monthly\":[$trafficmonths]},\"rootpw\":\"$(checkpasswd)\"}" | sed 's/,}/}/g' | sed 's/,]/]/g'
+    echo "{\"cpu\":{$cpuinfo\"cores\":{$cpuperc},$cputemp},\"ram\":{$memtype\"total\":\"$memtotal\",\"free\":\"$memfree\"},\"hdds\":[$hdds],\"ipv4\":{$ipv4},\"traffic\":{\"daily\":[$trafficdays],\"monthly\":[$trafficmonths]},\"rootpw\":\"$(checkpasswd $VAR_C)\"}" | sed 's/,}/}/g' | sed 's/,]/]/g'
 fi
 
 
