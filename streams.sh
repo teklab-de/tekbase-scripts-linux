@@ -110,8 +110,9 @@ if [ "$VAR_A" = "start" ]; then
 	    sed -i '/<bitrate>/Ic\<bitrate>'$VAR_H'</bitrate>' ices.xml
 	fi
 	if [ "$VAR_E" = "ices2" ]; then
-	    sed -i '/<port>/Ic\<port>'$VAR_G'</port>' ices2.xml
+	    sed -i '/<Port>/Ic\<Port>'$VAR_G'</Port>' ices2.xml
 	    sed -i '/<nominal-bitrate>/Ic\<nominal-bitrate>'$VAR_H'</nominal-bitrate>' ices2.xml
+	    sed -i '/<Background>/Ic\<Background>1</Background>' ices2.xml
 	fi
 
 	$VAR_F &
