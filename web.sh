@@ -39,9 +39,10 @@ if [ "$VAR_A" = "dbcreate" ]; then
         mysqlusr=$(grep -i login /etc/mysql/settings.ini | awk '{print $2}')
 
         Q1="CREATE DATABASE IF NOT EXISTS $VAR_C;"
-        Q2="GRANT ALL PRIVILEGES ON $VAR_C.* TO '$VAR_D'@'%' IDENTIFIED BY '$VAR_E' WITH GRANT OPTION;"
-        Q3="FLUSH PRIVILEGES;"
-        SQL="${Q1}${Q2}${Q3}"
+        Q2="CREATE USER '$VAR_D'@'%' IDENTIFIED BY '$VAR_E';"
+        Q3="GRANT ALL PRIVILEGES ON $VAR_C.* TO '$VAR_D'@'%';"
+        Q4="FLUSH PRIVILEGES;"
+        SQL="${Q1}${Q2}${Q3}${Q4}"
 
         mysql --user=$mysqlusr --password=$mysqlpwd -e "$SQL"
         echo "ID1"
@@ -98,7 +99,7 @@ if [ "$VAR_A" = "dbpasswd" ]; then
         mysqlpwd=$(grep -i password /etc/mysql/settings.ini | awk '{print $2}')
         mysqlusr=$(grep -i login /etc/mysql/settings.ini | awk '{print $2}')
 
-        Q1="UPDATE mysql.user SET Password=PASSWORD('$VAR_D') WHERE User='$VAR_C';"
+        Q1="SET PASSWORD FOR '$VAR_C'@'%' = PASSWORD('$VAR_D');"
         Q2="FLUSH PRIVILEGES;"
         SQL="${Q1}${Q2}"
 
